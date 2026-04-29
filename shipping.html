@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>HQ — Shipping</title>
+<style>
+:root { --bg:#0a0a0f; --panel:#12121a; --border:#1e1e2e; --text:#e0e0e0; --dim:#666; --accent:#6366f1; --green:#22c55e; --red:#ef4444; --yellow:#eab308; --orange:#f97316; --blue:#3b82f6; --cyan:#22d3ee; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system,BlinkMacSystemFont,'SF Pro',system-ui,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+.topbar { display:flex; align-items:center; justify-content:space-between; padding:10px 16px; background:var(--panel); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:10; }
+.topbar .left { display:flex; align-items:center; gap:12px; }
+.topbar .back { color:var(--dim); text-decoration:none; font-size:13px; padding:4px 8px; border:1px solid var(--border); border-radius:6px; }
+.topbar .back:hover { color:var(--text); border-color:var(--accent); }
+.topbar h1 { font-size:18px; font-weight:700; background:linear-gradient(135deg,#e94560,#f97316); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.topbar .right { display:flex; align-items:center; gap:12px; }
+
+.stats-bar { display:flex; gap:16px; padding:10px 16px; background:#0c0c12; border-bottom:1px solid var(--border); align-items:center; flex-wrap:wrap; }
+.stat { display:flex; align-items:center; gap:6px; font-size:12px; }
+.stat .num { font-weight:700; font-size:16px; }
+.stat .lbl { color:var(--dim); font-size:10px; text-transform:uppercase; letter-spacing:.5px; }
+.stat.green .num { color:var(--green); }
+.stat.orange .num { color:var(--orange); }
+.stat.cyan .num { color:var(--cyan); }
+
+.page { padding:14px 16px; max-width:1100px; margin:0 auto; padding-bottom:70px; }
+
+.order-wrapper { display:flex; gap:0; align-items:stretch; margin-bottom:10px; }
+.order-nav { display:flex; flex-direction:column; gap:8px; justify-content:center; padding:0 10px; background:var(--bg); border-radius:10px 0 0 10px; }
+.order-nav-btn { width:44px; height:44px; border-radius:50%; border:1px solid var(--border); background:var(--panel); color:var(--dim); font-size:22px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; }
+.order-nav-btn:hover { border-color:var(--accent); color:var(--text); background:#1a1a2e; }
+.order-card { background:var(--panel); border:1px solid var(--border); border-radius:0 10px 10px 0; padding:12px 14px; transition:all .3s; flex:1; position:relative; }
+.order-card:hover { border-color:#333; }
+.order-card.fraud { border:2px solid var(--red); background:#1a0a0a; }
+.fraud-banner { background:var(--red); color:#fff; font-size:11px; font-weight:700; padding:6px 10px; border-radius:6px; margin-bottom:8px; display:flex; align-items:flex-start; gap:6px; }
+.fraud-banner .fraud-flags { font-weight:400; font-size:10px; }
+
+.order-head { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; }
+.order-id { font-size:13px; color:var(--dim); }
+.order-customer { font-size:20px; font-weight:700; color:var(--cyan); }
+.order-address { font-size:13px; color:var(--dim); margin-top:2px; }
+.order-history { font-size:12px; color:var(--dim); margin-top:4px; }
+.order-history .spent { color:var(--green); font-weight:700; }
+.order-history .repeat { color:var(--yellow); font-weight:600; }
+
+.badge { display:inline-block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; padding:3px 10px; border-radius:10px; margin-left:6px; }
+.badge.dup { background:var(--red); color:#fff; }
+.badge.note { background:#4ade80; color:#0a0a0f; font-weight:700; }
+.badge.store { background:var(--accent); color:#fff; }
+.badge.priority { background:var(--orange); color:#fff; }
+
+.order-items { margin:8px 0; }
+.item-row { font-size:14px; padding:4px 0; display:flex; gap:10px; align-items:flex-start; }
+.item-thumb { width:140px; height:140px; border-radius:6px; object-fit:cover; border:1px solid var(--border); flex-shrink:0; background:var(--bg); }
+.item-detail { flex:1; min-width:0; padding-top:4px; }
+.item-name-line { display:flex; align-items:baseline; gap:6px; flex-wrap:wrap; }
+.item-name { color:var(--text); }
+.item-qty { color:var(--dim); flex-shrink:0; }
+.item-price { color:var(--green); font-size:14px; flex-shrink:0; font-weight:600; }
+.item-vars { display:flex; flex-wrap:wrap; gap:5px; margin-top:6px; }
+.item-var-tag { font-size:13px; color:#93c5fd; font-weight:600; background:#0d1a2e; padding:3px 8px; border-radius:4px; white-space:nowrap; }
+
+.order-email { font-size:12px; color:var(--cyan); margin-top:2px; opacity:.8; }
+.order-coupon { display:inline; font-size:11px; color:var(--yellow); font-weight:600; margin-left:8px; }
+.order-note { background:#4ade80; border:2px solid #22c55e; padding:12px 16px; border-radius:6px; font-size:15px; color:#0a0a0f; margin:10px 0; font-weight:700; line-height:1.5; }
+
+.admin-note-box { margin:8px 0; }
+.admin-note-box textarea { width:100%; padding:6px 8px; background:#0a0a12; border:1px solid var(--border); border-radius:6px; color:var(--text); font-size:11px; font-family:inherit; resize:vertical; min-height:36px; max-height:100px; }
+.admin-note-box textarea:focus { outline:none; border-color:var(--accent); }
+.admin-note-box .note-row { display:flex; gap:6px; align-items:center; margin-top:4px; }
+.admin-note-box .note-status { font-size:10px; color:var(--green); }
+
+.order-total { color:var(--green); font-weight:700; font-size:18px; }
+.order-ship-method { color:var(--orange); font-weight:600; font-size:14px; }
+
+.ship-controls { display:flex; gap:8px; align-items:center; margin-top:10px; padding-top:10px; border-top:1px solid var(--border); }
+.weight-input { width:70px; padding:6px 8px; background:#0a0a12; border:1px solid var(--border); border-radius:6px; color:var(--text); font-size:13px; text-align:center; }
+.weight-input:focus { outline:none; border-color:var(--accent); }
+.oz-label { font-size:11px; color:var(--dim); }
+.btn { padding:8px 16px; border-radius:6px; border:1px solid var(--border); background:var(--panel); color:var(--text); font-size:14px; cursor:pointer; transition:all .2s; white-space:nowrap; }
+.btn:hover { border-color:var(--accent); background:#1a1a2e; }
+.btn.primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+.btn.primary:hover { background:#5558d4; }
+.btn.success { background:var(--green); border-color:var(--green); color:#000; font-weight:700; }
+.btn:disabled { opacity:.4; cursor:default; }
+
+.rates-grid { display:flex; flex-wrap:wrap; gap:4px; margin-top:8px; }
+.rate-btn { padding:4px 8px; border-radius:4px; border:1px solid var(--border); background:#0e0e18; color:var(--text); font-size:10px; cursor:pointer; text-align:left; transition:all .15s; white-space:nowrap; }
+.rate-btn:hover { opacity:.85; }
+.rate-btn .rate-price { font-size:12px; font-weight:700; display:inline; }
+.rate-btn .rate-carrier { font-size:9px; display:inline; margin-left:4px; }
+.rate-btn .rate-days { font-size:9px; display:inline; margin-left:2px; }
+.rate-btn .rate-type { font-size:8px; color:var(--yellow); display:inline; margin-left:2px; }
+.rate-btn.cheapest { box-shadow:0 0 8px rgba(34,197,94,.2); }
+.rate-btn.usps { border-color:#1a3a6e; background:linear-gradient(135deg,#0a1a3a,#0e2450); }
+.rate-btn.usps .rate-price { color:#5b9aff; }
+.rate-btn.usps .rate-carrier { color:#3d7bd4; }
+.rate-btn.usps .rate-days { color:#7bb3ff; }
+.rate-btn.usps:hover { border-color:#2a5aae; }
+.rate-btn.fedex { border-color:#4a1a6e; background:linear-gradient(135deg,#1a0a2a,#2a1040); }
+.rate-btn.fedex .rate-price { color:#d97aff; }
+.rate-btn.fedex .rate-carrier { color:#ff8c00; }
+.rate-btn.fedex .rate-days { color:#d97aff; }
+.rate-btn.fedex:hover { border-color:#6a2a9e; }
+.rate-btn.ups { border-color:#5a3a0a; background:linear-gradient(135deg,#1a1000,#2a1a08); }
+.rate-btn.ups .rate-price { color:#ffb347; }
+.rate-btn.ups .rate-carrier { color:#8B6914; }
+.rate-btn.ups .rate-days { color:#ffd700; }
+.rate-btn.ups:hover { border-color:#8a5a1a; }
+
+/* Multi-box panel */
+.multibox-toggle { padding:4px 10px; font-size:11px; border:1px solid var(--border); border-radius:4px; background:#0e0e18; color:var(--dim); cursor:pointer; transition:all .2s; }
+.multibox-toggle:hover { border-color:var(--accent); color:var(--text); }
+.multibox-toggle.active { border-color:var(--orange); color:var(--orange); background:#1a1200; }
+.multibox-panel { display:none; margin-top:8px; padding:10px 12px; background:#0a0a14; border:1px solid var(--border); border-radius:6px; }
+.multibox-panel.open { display:block; }
+.multibox-panel .mb-row { display:flex; gap:8px; align-items:center; margin-bottom:6px; flex-wrap:wrap; }
+.multibox-panel .mb-label { font-size:11px; color:var(--dim); min-width:50px; }
+.multibox-panel .mb-input { width:60px; padding:4px 6px; background:#0a0a12; border:1px solid var(--border); border-radius:4px; color:var(--text); font-size:12px; text-align:center; }
+.multibox-panel .mb-input:focus { outline:none; border-color:var(--accent); }
+.multibox-panel .mb-box-weights { display:flex; flex-wrap:wrap; gap:6px; margin:6px 0; }
+.multibox-panel .mb-box-wt { display:flex; align-items:center; gap:4px; background:#0d0d1a; padding:4px 8px; border-radius:4px; border:1px solid var(--border); }
+.multibox-panel .mb-box-wt label { font-size:10px; color:var(--orange); font-weight:600; white-space:nowrap; }
+.multibox-panel .mb-box-wt input { width:55px; padding:3px 5px; background:#0a0a12; border:1px solid var(--border); border-radius:3px; color:var(--text); font-size:12px; text-align:center; }
+.multibox-panel .mb-box-wt input:focus { outline:none; border-color:var(--accent); }
+.rate-btn .rate-total { font-size:10px; color:var(--orange); font-weight:700; display:inline; margin-left:3px; }
+
+/* Completed section */
+.completed-section { margin-top:24px; border-top:1px solid var(--border); padding-top:12px; }
+.completed-section h3 { font-size:13px; color:var(--green); margin-bottom:10px; font-weight:600; }
+.completed-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.completed-card { background:#0a150a; border:1px solid #1a3a1a; border-radius:8px; padding:10px 12px; display:flex; flex-direction:column; gap:6px; }
+.cc-top { display:flex; justify-content:space-between; align-items:flex-start; }
+.cc-top .cc-left { display:flex; flex-direction:column; gap:2px; }
+.cc-id { color:var(--dim); font-size:10px; }
+.cc-name { color:var(--green); font-weight:700; font-size:13px; }
+.cc-address { color:var(--dim); font-size:10px; }
+.cc-total { color:var(--green); font-weight:700; font-size:14px; text-align:right; }
+.cc-carrier { color:var(--dim); font-size:10px; text-align:right; }
+.cc-items { display:flex; flex-direction:column; gap:2px; }
+.cc-item { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--text); }
+.cc-item img { width:28px; height:28px; border-radius:4px; object-fit:cover; border:1px solid #1a3a1a; }
+.cc-bottom { display:flex; justify-content:space-between; align-items:center; padding-top:4px; border-top:1px solid #1a3a1a; }
+.cc-tracking { font-family:monospace; font-size:10px; color:var(--cyan); }
+.btn.reprint { background:#0a200a; border-color:var(--green); color:var(--green); font-size:11px; padding:4px 10px; flex-shrink:0; }
+.btn.reprint:hover { background:#0f2a0f; }
+.completed-card { cursor:pointer; }
+.completed-card:hover { border-color:#2a5a2a; }
+.cc-detail-panel { display:none; margin-top:6px; padding-top:6px; border-top:1px solid #1a3a1a; }
+.cc-detail-panel.open { display:block; }
+.cc-detail-item { display:flex; gap:8px; align-items:flex-start; padding:4px 0; font-size:11px; }
+.cc-detail-item img { width:50px; height:50px; border-radius:6px; object-fit:cover; border:1px solid #1a3a1a; flex-shrink:0; }
+.cc-detail-item .cc-item-info { display:flex; flex-direction:column; gap:2px; }
+.cc-detail-item .cc-item-name { color:var(--text); }
+.cc-detail-item .cc-item-var { color:var(--yellow); font-size:10px; font-weight:600; padding-left:8px; }
+@media(max-width:700px) { .completed-grid { grid-template-columns:1fr; } }
+
+/* Alerts bar */
+.alerts-bar { padding:0 16px; max-width:1100px; margin:10px auto 0; }
+.alert { padding:8px 12px; border-radius:8px; font-size:12px; font-weight:600; margin-bottom:6px; display:flex; align-items:center; gap:8px; }
+.alert.warn { background:#2a1a00; border:1px solid var(--orange); color:var(--orange); }
+.alert.info { background:#0a1a2a; border:1px solid var(--blue); color:var(--blue); }
+.alert.danger { background:#2a0a0a; border:1px solid var(--red); color:var(--red); }
+
+.loading { color:var(--dim); font-size:11px; padding:4px 0; }
+
+.scan-form-bar { position:fixed; bottom:0; left:0; right:0; padding:10px 16px; background:var(--panel); border-top:1px solid var(--border); display:flex; justify-content:center; gap:12px; z-index:10; }
+
+@media(max-width:700px) {
+    .rates-grid { grid-template-columns:1fr 1fr; }
+    .ship-controls { flex-wrap:wrap; }
+    .completed-card { flex-wrap:wrap; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+    <div class="left">
+        <a href="/" class="back">← HQ</a>
+        <h1>📦 Shipping</h1>
+    </div>
+    <div class="right">
+        <span style="font-size:9px;color:#333;margin-right:8px">v11</span>
+        <span id="time" style="font-size:11px;color:var(--dim)"></span>
+    </div>
+</div>
+
+<div class="stats-bar">
+    <div class="stat orange"><div><span class="num" id="stat-pending">—</span><br><span class="lbl">Processing</span></div></div>
+    <div class="stat green"><div><span class="num" id="stat-shipped">0</span><br><span class="lbl">Shipped Today</span></div></div>
+    <div class="stat cyan"><div><span class="num" id="stat-cost">$0</span><br><span class="lbl">Postage</span></div></div>
+</div>
+
+<div id="alerts-bar" class="alerts-bar"></div>
+<div class="page">
+    <div id="orders-container">
+        <div class="loading">Loading orders...</div>
+    </div>
+    <div id="completed-container"></div>
+</div>
+
+<div class="scan-form-bar">
+    <button class="btn" onclick="location.reload()">🔄 Refresh</button>
+    <button class="btn primary" onclick="createScanForm()">📋 SCAN Form — <span id="scan-count">0</span> eligible</button>
+</div>
+
+<!-- Hidden iframe for printing labels -->
+<iframe id="print-frame" style="display:none"></iframe>
+
+<script>
+let shippedCount = 0;
+let totalPostage = 0;
+// Label URLs for orders we shipped this session (keyed by "store-orderId")
+let sessionLabels = {};
+
+function updateTime() {
+    const d = new Date();
+    document.getElementById('time').textContent = d.toLocaleTimeString('en-US', {hour:'numeric',minute:'2-digit'});
+}
+setInterval(updateTime, 30000); updateTime();
+
+async function api(url, opts={}) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 90000); // 90s timeout
+    try {
+        const r = await fetch(url, {headers:{'Content-Type':'application/json'}, signal: controller.signal, ...opts});
+        clearTimeout(timeout);
+        if (!r.ok) return {error: `Server error ${r.status}`};
+        return await r.json();
+    } catch(e) {
+        clearTimeout(timeout);
+        if (e.name === 'AbortError') return {error: 'Request timed out (90s)'};
+        return {error: e.message || 'Network error'};
+    }
+}
+
+function renderCompleted(completedToday) {
+    const container = document.getElementById('completed-container');
+    if (!completedToday || !completedToday.length) { container.innerHTML = ''; return; }
+
+
+    let html = '<div class="completed-section"><h3>✅ Completed Today (' + completedToday.length + ')</h3><div class="completed-grid">';
+    completedToday.forEach((c, idx) => {
+        const labelUrl = sessionLabels[`${c.store}-${c.id}`] || c.label_url || '';
+        const isEasypost = labelUrl && (labelUrl.includes('easypost') || sessionLabels[`${c.store}-${c.id}`]);
+        const reprintBtn = isEasypost
+            ? `<button class="btn reprint" onclick="event.stopPropagation();printLabel('${labelUrl}')">🖨️ Reprint</button>`
+            : '';
+
+        let itemsSummary = '';
+        (c.items || []).forEach(i => {
+            const thumb = i.image ? `<img src="${i.image}" alt="">` : '';
+            itemsSummary += `<div class="cc-item">${thumb}<span>${i.name} ×${i.qty}</span></div>`;
+        });
+
+        let detailHtml = '';
+        (c.items || []).forEach(i => {
+            const thumb = i.image ? `<img src="${i.image}" alt="">` : '';
+            let varsHtml = '';
+            (i.variations || []).forEach(v => {
+                varsHtml += `<div class="cc-item-var">↳ ${v}</div>`;
+            });
+            detailHtml += `<div class="cc-detail-item">${thumb}<div class="cc-item-info"><span class="cc-item-name">${i.name} ×${i.qty}</span>${varsHtml}</div></div>`;
+        });
+
+        const storeBadge = c.store !== 'ineedhemp' ? `<span class="badge store" style="margin-left:0">${c.store_label}</span>` : '';
+
+        html += `
+        <div class="completed-card" onclick="document.getElementById('detail-${idx}').classList.toggle('open')">
+            <div class="cc-top">
+                <div class="cc-left">
+                    <span class="cc-id">#${c.id} ${storeBadge}</span>
+                    <span class="cc-name">${c.customer}</span>
+                    <span class="cc-address">${c.address || ''}</span>
+                </div>
+                <div>
+                    <div class="cc-total">$${c.total}</div>
+                    <div class="cc-carrier">${c.carrier || ''} ${c.ship_method || ''}</div>
+                </div>
+            </div>
+            <div class="cc-items">${itemsSummary}</div>
+            <div class="cc-bottom">
+                <span class="cc-tracking">${c.tracking || 'no tracking'}</span>
+                ${reprintBtn}
+            </div>
+            <div class="cc-detail-panel" id="detail-${idx}">
+                ${detailHtml}
+            </div>
+        </div>`;
+    });
+    html += '</div></div>';
+    container.innerHTML = html;
+}
+
+function couponHtml(o) {
+    if (!o.coupons || !o.coupons.length) return '';
+    return o.coupons.map(c =>
+        `<span class="order-coupon">${c.code.toUpperCase()} (-$${parseFloat(c.discount).toFixed(2)})</span>`
+    ).join('');
+}
+
+async function saveNote(store, orderId) {
+    const ta = document.getElementById(`note-ta-${store}-${orderId}`);
+    const status = document.getElementById(`note-status-${store}-${orderId}`);
+    const btn = document.getElementById(`note-btn-${store}-${orderId}`);
+    const text = ta.value.trim();
+    if (!text) return;
+    btn.disabled = true;
+    status.textContent = 'Saving...';
+    status.style.color = 'var(--dim)';
+    try {
+        const result = await api('/api/shipping/note', {
+            method: 'POST',
+            body: JSON.stringify({ store, order_id: orderId, note: text })
+        });
+        if (result.ok) {
+            status.textContent = 'Saved!';
+            status.style.color = 'var(--green)';
+            ta.value = '';
+            setTimeout(() => { status.textContent = ''; }, 3000);
+        } else {
+            status.textContent = result.error || 'Error';
+            status.style.color = 'var(--red)';
+        }
+    } catch(e) {
+        status.textContent = 'Network error';
+        status.style.color = 'var(--red)';
+    }
+    btn.disabled = false;
+}
+
+// ── Multi-box helpers ──
+function toggleMultiBox(store, orderId) {
+    const panel = document.getElementById(`mb-panel-${store}-${orderId}`);
+    const btn = document.getElementById(`mb-toggle-${store}-${orderId}`);
+    const isOpen = panel.classList.toggle('open');
+    btn.classList.toggle('active', isOpen);
+    if (isOpen) {
+        // Initialize with 2 boxes when first opened, default weight from main field
+        const mainWt = document.getElementById(`wt-${store}-${orderId}`).value;
+        const countInput = document.getElementById(`mb-count-${store}-${orderId}`);
+        if (parseInt(countInput.value) < 2) countInput.value = 2;
+        updateBoxWeightFields(store, orderId, mainWt);
+    }
+}
+
+function updateBoxWeightFields(store, orderId, defaultWeight) {
+    const count = parseInt(document.getElementById(`mb-count-${store}-${orderId}`).value) || 2;
+    const sameDim = document.getElementById(`mb-samedim-${store}-${orderId}`).checked;
+    const container = document.getElementById(`mb-fields-${store}-${orderId}`);
+    let html = '';
+
+    if (sameDim) {
+        // Shared dimensions row
+        const sL = document.getElementById(`mb-len-${store}-${orderId}-shared`);
+        const sW = document.getElementById(`mb-wid-${store}-${orderId}-shared`);
+        const sH = document.getElementById(`mb-ht-${store}-${orderId}-shared`);
+        html += `<div class="mb-row" style="margin-bottom:4px"><span class="mb-label">Size:</span>
+            <input type="number" class="mb-input" id="mb-len-${store}-${orderId}-shared" placeholder="L" min="1" style="width:45px" value="${sL?sL.value:''}">
+            <span style="font-size:10px;color:var(--dim)">×</span>
+            <input type="number" class="mb-input" id="mb-wid-${store}-${orderId}-shared" placeholder="W" min="1" style="width:45px" value="${sW?sW.value:''}">
+            <span style="font-size:10px;color:var(--dim)">×</span>
+            <input type="number" class="mb-input" id="mb-ht-${store}-${orderId}-shared" placeholder="H" min="1" style="width:45px" value="${sH?sH.value:''}">
+            <span style="font-size:10px;color:var(--dim)">in</span></div>`;
+        for (let i = 1; i <= count; i++) {
+            const existing = document.getElementById(`mb-wt-${store}-${orderId}-${i}`);
+            const val = existing ? existing.value : (defaultWeight || 16);
+            html += `<div class="mb-box-wt"><label>Box ${i}:</label><input type="number" id="mb-wt-${store}-${orderId}-${i}" value="${val}" min="0.1" step="0.5"><span style="font-size:10px;color:var(--dim)">oz</span></div>`;
+        }
+    } else {
+        // Per-box weight + dimensions
+        for (let i = 1; i <= count; i++) {
+            const existing = document.getElementById(`mb-wt-${store}-${orderId}-${i}`);
+            const val = existing ? existing.value : (defaultWeight || 16);
+            const eL = document.getElementById(`mb-len-${store}-${orderId}-${i}`);
+            const eW = document.getElementById(`mb-wid-${store}-${orderId}-${i}`);
+            const eH = document.getElementById(`mb-ht-${store}-${orderId}-${i}`);
+            html += `<div class="mb-box-wt" style="flex-wrap:wrap;gap:4px"><label>Box ${i}:</label>
+                <input type="number" id="mb-wt-${store}-${orderId}-${i}" value="${val}" min="0.1" step="0.5"><span style="font-size:10px;color:var(--dim)">oz</span>
+                <input type="number" class="mb-input" id="mb-len-${store}-${orderId}-${i}" placeholder="L" min="1" style="width:38px;margin-left:6px" value="${eL?eL.value:''}">
+                <span style="font-size:10px;color:var(--dim)">×</span>
+                <input type="number" class="mb-input" id="mb-wid-${store}-${orderId}-${i}" placeholder="W" min="1" style="width:38px" value="${eW?eW.value:''}">
+                <span style="font-size:10px;color:var(--dim)">×</span>
+                <input type="number" class="mb-input" id="mb-ht-${store}-${orderId}-${i}" placeholder="H" min="1" style="width:38px" value="${eH?eH.value:''}">
+                <span style="font-size:10px;color:var(--dim)">in</span></div>`;
+        }
+    }
+    container.innerHTML = html;
+}
+
+function onBoxCountChange(store, orderId) {
+    const mainWt = document.getElementById(`wt-${store}-${orderId}`).value;
+    updateBoxWeightFields(store, orderId, mainWt);
+}
+
+async function getMultiBoxRates(store, orderId) {
+    const count = parseInt(document.getElementById(`mb-count-${store}-${orderId}`).value) || 2;
+    const boxWeights = [];
+    for (let i = 1; i <= count; i++) {
+        const el = document.getElementById(`mb-wt-${store}-${orderId}-${i}`);
+        boxWeights.push(parseFloat(el.value) || 16);
+    }
+
+    const ratesDiv = document.getElementById(`rates-${store}-${orderId}`);
+    ratesDiv.innerHTML = `<div class="loading">⏳ Getting rates for ${count} boxes...</div>`;
+
+    try {
+        const data = await api('/api/shipping/orders');
+        if (data.error) { ratesDiv.innerHTML = `<div style="color:var(--red)">❌ ${data.error}</div>`; return; }
+        const order = data.orders.find(o => o.store === store && o.id === orderId);
+        if (!order) { ratesDiv.innerHTML = '<div style="color:var(--red)">❌ Order not found</div>'; return; }
+
+        const sameDim = document.getElementById(`mb-samedim-${store}-${orderId}`).checked;
+        const boxDims = [];
+        if (sameDim) {
+            const sL = parseFloat(document.getElementById(`mb-len-${store}-${orderId}-shared`).value) || null;
+            const sW = parseFloat(document.getElementById(`mb-wid-${store}-${orderId}-shared`).value) || null;
+            const sH = parseFloat(document.getElementById(`mb-ht-${store}-${orderId}-shared`).value) || null;
+            const shared = (sL && sW && sH) ? {length:sL, width:sW, height:sH} : null;
+            for (let i = 0; i < count; i++) boxDims.push(shared);
+        } else {
+            for (let i = 1; i <= count; i++) {
+                const bL = parseFloat(document.getElementById(`mb-len-${store}-${orderId}-${i}`).value) || null;
+                const bW = parseFloat(document.getElementById(`mb-wid-${store}-${orderId}-${i}`).value) || null;
+                const bH = parseFloat(document.getElementById(`mb-ht-${store}-${orderId}-${i}`).value) || null;
+                boxDims.push((bL && bW && bH) ? {length:bL, width:bW, height:bH} : null);
+            }
+        }
+
+        const result = await api('/api/shipping/rates', {
+            method: 'POST',
+            body: JSON.stringify({ box_weights: boxWeights, box_dims: boxDims, to_address: order.address })
+        });
+
+        if (result.error) { ratesDiv.innerHTML = `<div style="color:var(--red)">❌ ${result.error}</div>`; return; }
+
+        const rates = result.rates || [];
+        const numBoxes = result.boxes || count;
+        if (!rates.length) { ratesDiv.innerHTML = '<div style="color:var(--dim)">No rates available for all boxes</div>'; return; }
+
+        // Check if we got multi-box or single-box format back
+        const isMultiBox = rates[0] && rates[0].total_rate !== undefined;
+        if (!isMultiBox) {
+            ratesDiv.innerHTML = '<div style="color:var(--red)">❌ Server returned single-box rates — check box weights</div>';
+            return;
+        }
+
+        // Build per-box rate sections with checkboxes
+        // First, reorganize rates by box
+        const boxRates = {}; // boxIndex -> [{rate, carrier, service, shipment_id, rate_id, ...}]
+        rates.forEach(r => {
+            if (r.box_details) {
+                r.box_details.forEach((bd, bi) => {
+                    if (!boxRates[bi]) boxRates[bi] = [];
+                    boxRates[bi].push({
+                        rate: bd.rate,
+                        carrier: r.carrier,
+                        carrier_raw: r.carrier_raw,
+                        service: r.service,
+                        days: r.days,
+                        type: r.type,
+                        shipment_id: bd.shipment_id,
+                        rate_id: bd.rate_id,
+                    });
+                });
+            }
+        });
+
+        let html = `<div style="font-size:10px;color:var(--orange);margin-top:6px;margin-bottom:4px">📦 ${numBoxes} boxes — select a rate for each box, then click Buy Labels</div>`;
+
+        // Store selections globally for this order
+        if (!window._mbSelections) window._mbSelections = {};
+        window._mbSelections[`${store}-${orderId}`] = {};
+
+        for (let bi = 0; bi < numBoxes; bi++) {
+            const bRates = boxRates[bi] || [];
+            // Deduplicate by carrier+service
+            const seen = new Set();
+            const uniqueRates = bRates.filter(r => {
+                const key = `${r.carrier}-${r.service}`;
+                if (seen.has(key)) return false;
+                seen.add(key);
+                return true;
+            });
+            uniqueRates.sort((a, b) => a.rate - b.rate);
+
+            html += `<div style="margin:8px 0;padding:8px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:6px">`;
+            html += `<div style="font-size:12px;font-weight:600;color:var(--cyan);margin-bottom:6px">Box ${bi+1} — ${boxWeights[bi]}oz</div>`;
+            html += `<div class="rates-grid">`;
+            uniqueRates.forEach((r, ri) => {
+                const cheapest = ri === 0 ? ' cheapest' : '';
+                const carrierClass = r.carrier.toLowerCase().includes('usps') ? 'usps' :
+                                     r.carrier.toLowerCase().includes('fedex') ? 'fedex' :
+                                     r.carrier.toLowerCase().includes('ups') ? 'ups' : '';
+                const typeTag = r.type !== 'Standard' ? `<span class="rate-type">📨 ${r.type}</span>` : '';
+                const rateData = JSON.stringify({shipment_id: r.shipment_id, rate_id: r.rate_id, rate: r.rate, carrier_raw: r.carrier_raw}).replace(/"/g, '&quot;');
+                html += `
+                <button class="rate-btn ${carrierClass}${cheapest}" onclick="selectBoxRate('${store}',${orderId},${bi},this)" data-rate-info="${rateData}" style="position:relative">
+                    <span class="rate-price">$${r.rate.toFixed(2)}</span>
+                    <span class="rate-carrier">${r.carrier} ${r.service}</span>
+                    <span class="rate-days">${r.days||'?'}d</span>
+                    ${typeTag}
+                </button>`;
+            });
+            html += `</div></div>`;
+        }
+
+        // Buy all button + total display
+        html += `<div id="mb-summary-${store}-${orderId}" style="margin-top:8px;padding:10px;display:flex;align-items:center;gap:10px;background:rgba(0,255,0,0.05);border:1px solid var(--green);border-radius:6px">
+            <span id="mb-total-${store}-${orderId}" style="font-size:14px;font-weight:700;color:var(--dim)">Select a rate for each box above</span>
+            <button class="btn primary" id="mb-buy-${store}-${orderId}" onclick="buyMultiBoxLabels('${store}',${orderId})" style="font-size:13px;padding:8px 20px;opacity:0.4;pointer-events:none">🚀 Buy All Labels</button>
+        </div>`;
+
+        ratesDiv.innerHTML = html;
+    } catch(e) {
+        ratesDiv.innerHTML = `<div style="color:var(--red)">❌ ${e.message || 'Failed to get multi-box rates'}</div>`;
+    }
+}
+
+function selectBoxRate(store, orderId, boxIndex, btn) {
+    // Deselect siblings
+    btn.parentElement.querySelectorAll('.rate-btn').forEach(b => b.style.outline = '');
+    // Select this one
+    btn.style.outline = '2px solid var(--green)';
+    btn.style.outlineOffset = '-2px';
+
+    // Store selection
+    const rateInfo = JSON.parse(btn.getAttribute('data-rate-info').replace(/&quot;/g, '"'));
+    if (!window._mbSelections) window._mbSelections = {};
+    if (!window._mbSelections[`${store}-${orderId}`]) window._mbSelections[`${store}-${orderId}`] = {};
+    window._mbSelections[`${store}-${orderId}`][boxIndex] = rateInfo;
+
+    // Update summary
+    const sel = window._mbSelections[`${store}-${orderId}`];
+    const count = parseInt(document.getElementById(`mb-count-${store}-${orderId}`).value) || 2;
+    const selectedCount = Object.keys(sel).length;
+    const summary = document.getElementById(`mb-summary-${store}-${orderId}`);
+
+    const buyBtn = document.getElementById(`mb-buy-${store}-${orderId}`);
+    let total = 0;
+    Object.values(sel).forEach(s => total += s.rate);
+
+    if (selectedCount === count) {
+        document.getElementById(`mb-total-${store}-${orderId}`).textContent = `Total: $${total.toFixed(2)} (${count} labels)`;
+        document.getElementById(`mb-total-${store}-${orderId}`).style.color = 'var(--green)';
+        buyBtn.style.opacity = '1';
+        buyBtn.style.pointerEvents = 'auto';
+    } else {
+        document.getElementById(`mb-total-${store}-${orderId}`).textContent = `${selectedCount}/${count} boxes selected — $${total.toFixed(2)} so far`;
+        document.getElementById(`mb-total-${store}-${orderId}`).style.color = 'var(--dim)';
+        buyBtn.style.opacity = '0.4';
+        buyBtn.style.pointerEvents = 'none';
+    }
+}
+
+async function buyMultiBoxLabels(store, orderId) {
+    const sel = window._mbSelections[`${store}-${orderId}`];
+    if (!sel) return;
+
+    const boxDetails = Object.keys(sel).sort().map(k => ({
+        shipment_id: sel[k].shipment_id,
+        rate_id: sel[k].rate_id,
+    }));
+    const carrier = sel[Object.keys(sel)[0]].carrier_raw;
+
+    const card = document.querySelector(`[id^="card-"][id*="${store}-${orderId}"]`);
+    const ratesDiv = document.getElementById(`rates-${store}-${orderId}`);
+    if (ratesDiv) ratesDiv.innerHTML = `<div class="loading">🚀 Buying ${boxDetails.length} labels...</div>`;
+
+    let result;
+    try {
+        result = await api('/api/shipping/ship', {
+            method: 'POST',
+            body: JSON.stringify({ store, order_id: orderId, carrier, box_details: boxDetails })
+        });
+    } catch(e) {
+        if (ratesDiv) ratesDiv.innerHTML = `<div style="color:var(--red)">❌ Network error</div>`;
+        return;
+    }
+
+    if (result.error) {
+        if (ratesDiv) ratesDiv.innerHTML = `<div style="color:var(--red)">❌ ${result.error}</div>`;
+        return;
+    }
+
+    if (card) card.remove();
+    shippedCount++;
+    totalPostage += result.cost;
+    document.getElementById('stat-pending').textContent = parseInt(document.getElementById('stat-pending').textContent) - 1;
+
+    // Print all labels
+    if (result.label_urls) {
+        result.label_urls.forEach(url => { try { printLabel(url); } catch(e) {} });
+    } else if (result.label_url) {
+        try { printLabel(result.label_url); } catch(e) {}
+    }
+
+    try {
+        const freshData = await api('/api/shipping/orders');
+        renderCompleted(freshData.completed_today || []);
+    } catch(e) {}
+}
+
+async function shipMultiBox(store, orderId, carrier, btnEl) {
+    const boxDetails = JSON.parse(btnEl.getAttribute('data-box-details').replace(/&quot;/g, '"'));
+    const numBoxes = boxDetails.length;
+    const card = document.getElementById(`card-${store}-${orderId}`);
+    const ratesDiv = document.getElementById(`rates-${store}-${orderId}`);
+    if (ratesDiv) ratesDiv.innerHTML = `<div class="loading">🚀 Buying ${numBoxes} labels...</div>`;
+
+    let result;
+    try {
+        result = await api('/api/shipping/ship', {
+            method: 'POST',
+            body: JSON.stringify({ store, order_id: orderId, carrier, box_details: boxDetails })
+        });
+    } catch(e) {
+        if (ratesDiv) ratesDiv.innerHTML = `<div style="color:var(--red)">❌ Network error</div>`;
+        return;
+    }
+
+    if (result.error) {
+        if (ratesDiv) ratesDiv.innerHTML = `<div style="color:var(--red)">❌ ${result.error}</div>`;
+        return;
+    }
+
+    // Remove the card
+    if (card) card.remove();
+
+    // Update stats
+    shippedCount++;
+    totalPostage += result.cost;
+    document.getElementById('stat-pending').textContent = parseInt(document.getElementById('stat-pending').textContent) - 1;
+
+    // Save first label URL for reprint
+    sessionLabels[`${store}-${orderId}`] = result.label_url;
+
+    // Print ALL labels
+    const labelUrls = result.all_label_urls || [result.label_url];
+    for (const url of labelUrls) {
+        if (url) {
+            try { await printLabel(url); } catch(e) { console.error('Print failed:', e); }
+        }
+    }
+
+    // Re-fetch completed
+    try {
+        const freshData = await api('/api/shipping/orders');
+        const completedToday = freshData.completed_today || [];
+        document.getElementById('stat-shipped').textContent = completedToday.length;
+        document.getElementById('stat-pending').textContent = (freshData.orders || []).length;
+        renderCompleted(completedToday);
+    } catch(e) { console.error('Refresh failed:', e); }
+}
+
+async function loadOrders() {
+    const data = await api('/api/shipping/orders');
+    const orders = data.orders || [];
+    const completedToday = data.completed_today || [];
+
+    document.getElementById('stat-pending').textContent = orders.length;
+    document.getElementById('stat-shipped').textContent = completedToday.length;
+    document.getElementById('scan-count').textContent = data.easypost_count || 0;
+
+    // Build alerts summary
+    const emailCount = {};
+    orders.forEach(o => { emailCount[o.email.toLowerCase()] = (emailCount[o.email.toLowerCase()]||0)+1; });
+    const dupes = new Set(Object.entries(emailCount).filter(([_,c])=>c>1).map(([e])=>e));
+
+    let alertsHtml = '';
+
+    // Fraud alerts (top priority)
+    const fraudOrders = orders.filter(o => o.fraud_flags && o.fraud_flags.length > 0);
+    if (fraudOrders.length) {
+        const fList = fraudOrders.map(o => `<strong>#${o.id} ${o.customer}</strong>`).join(', ');
+        alertsHtml += `<div class="alert danger">🚨 FRAUD WATCH: ${fList} — DO NOT SHIP without review</div>`;
+    }
+
+    // Duplicate customers
+    if (dupes.size) {
+        const dupNames = orders.filter(o => dupes.has(o.email.toLowerCase()))
+            .reduce((acc, o) => { acc[o.email.toLowerCase()] = acc[o.email.toLowerCase()] || {name: o.customer, ids: []}; acc[o.email.toLowerCase()].ids.push('#'+o.id); return acc; }, {});
+        const dupList = Object.values(dupNames).map(d => `<strong>${d.name}</strong> (${d.ids.join(', ')})`).join(' · ');
+        alertsHtml += `<div class="alert danger">⚠️ DUPLICATE CUSTOMERS — ship together: ${dupList}</div>`;
+    }
+
+    // Non-ineedhemp orders
+    const otherStores = {};
+    orders.forEach(o => {
+        if (o.store !== 'ineedhemp') {
+            otherStores[o.store_label] = otherStores[o.store_label] || [];
+            otherStores[o.store_label].push(`#${o.id} ${o.customer}`);
+        }
+    });
+    for (const [store, items] of Object.entries(otherStores)) {
+        alertsHtml += `<div class="alert info">🏪 ${store}: ${items.length} order${items.length>1?'s':''} — ${items.join(', ')}</div>`;
+    }
+
+    // Priority orders
+    const priorityOrders = orders.filter(o => o.ship_method.toLowerCase().includes('priority'));
+    if (priorityOrders.length) {
+        const pList = priorityOrders.map(o => `#${o.id} ${o.customer}`).join(', ');
+        alertsHtml += `<div class="alert warn">⚡ PRIORITY SHIPPING: ${pList}</div>`;
+    }
+
+    document.getElementById('alerts-bar').innerHTML = alertsHtml;
+
+    if (!orders.length) {
+        document.getElementById('orders-container').innerHTML = '<div style="text-align:center;padding:40px;color:var(--green);font-size:16px">🎉 All orders shipped!</div>';
+    } else {
+
+        // Sort orders: fraud first, then duplicates, then other stores, then priority, then the rest
+        orders.sort((a, b) => {
+            const aFraud = (a.fraud_flags && a.fraud_flags.length > 0) ? 1 : 0;
+            const bFraud = (b.fraud_flags && b.fraud_flags.length > 0) ? 1 : 0;
+            if (aFraud !== bFraud) return bFraud - aFraud;
+
+            const aDup = dupes.has(a.email.toLowerCase()) ? 1 : 0;
+            const bDup = dupes.has(b.email.toLowerCase()) ? 1 : 0;
+            if (aDup !== bDup) return bDup - aDup;
+
+            // Group duplicate customers together by email
+            if (aDup && bDup) {
+                const cmp = a.email.toLowerCase().localeCompare(b.email.toLowerCase());
+                if (cmp !== 0) return cmp;
+            }
+
+            const aOther = a.store !== 'ineedhemp' ? 1 : 0;
+            const bOther = b.store !== 'ineedhemp' ? 1 : 0;
+            if (aOther !== bOther) return bOther - aOther;
+
+            const aPri = a.ship_method.toLowerCase().includes('priority') ? 1 : 0;
+            const bPri = b.ship_method.toLowerCase().includes('priority') ? 1 : 0;
+            if (aPri !== bPri) return bPri - aPri;
+
+            return a.id - b.id;
+        });
+
+        // Group duplicate customer orders by email
+        const grouped = {};
+        const soloOrders = [];
+        orders.forEach(o => {
+            const email = o.email.toLowerCase();
+            if (dupes.has(email)) {
+                if (!grouped[email]) grouped[email] = [];
+                grouped[email].push(o);
+            } else {
+                soloOrders.push(o);
+            }
+        });
+
+        // Build render list: merged groups first, then solo orders
+        const renderList = [];
+        Object.values(grouped).forEach(group => renderList.push({ type: 'merged', orders: group }));
+        soloOrders.forEach(o => renderList.push({ type: 'single', orders: [o] }));
+
+        let html = '';
+        renderList.forEach((entry, idx) => {
+            const group = entry.orders;
+            const primary = group[0]; // Use first order for customer info/address
+            const isMerged = group.length > 1;
+            const isFraud = group.some(o => o.fraud_flags && o.fraud_flags.length > 0);
+            const isPriority = group.some(o => o.ship_method.toLowerCase().includes('priority'));
+
+            // Merged order IDs for card ID and display
+            const cardId = group.map(o => `${o.store}-${o.id}`).join('_');
+            const orderIds = group.map(o => `#${o.id}`).join(', ');
+            const combinedTotal = group.reduce((sum, o) => sum + parseFloat(o.total || 0), 0).toFixed(2);
+            const combinedWeight = group.reduce((sum, o) => sum + (o.weight_oz > 0 ? o.weight_oz : 2), 0);
+
+            let badges = '';
+            if (isFraud) badges += '<span class="badge dup">🚨 FRAUD</span>';
+            if (isMerged) badges += '<span class="badge dup">MERGED</span>';
+            if (primary.store !== 'ineedhemp') badges += `<span class="badge store">${primary.store_label}</span>`;
+            if (isPriority) badges += '<span class="badge priority">PRIORITY</span>';
+            if (group.some(o => o.customer_note)) badges += '<span class="badge note">📝 NOTE</span>';
+
+            // Build items HTML — grouped by order with subtle divider
+            let itemsHtml = '';
+            group.forEach((o, oi) => {
+                if (isMerged) {
+                    itemsHtml += `<div style="padding:4px 8px;margin:${oi > 0 ? '10px' : '0'} 0 4px 0;font-size:11px;color:var(--cyan);border-top:${oi > 0 ? '1px dashed var(--border)' : 'none'};font-weight:600">Order #${o.id} · $${o.total}</div>`;
+                }
+                o.items.forEach(i => {
+                    const thumb = i.image ? `<img class="item-thumb" src="${i.image}" alt="" loading="lazy">` : '';
+                    const priceStr = i.price ? `<span class="item-price">$${parseFloat(i.price).toFixed(2)}</span>` : '';
+                    let varsHtml = '';
+                    if (i.variations && i.variations.length) {
+                        varsHtml = '<div class="item-vars">' + i.variations.map(v => `<span class="item-var-tag">${v}</span>`).join('') + '</div>';
+                    }
+                    itemsHtml += `<div class="item-row">${thumb}<div class="item-detail"><div class="item-name-line"><span class="item-name">${i.name}</span> <span class="item-qty">×${i.qty}</span> ${priceStr}</div>${varsHtml}</div></div>`;
+                });
+            });
+
+            // Notes from all orders
+            let noteHtml = '';
+            group.forEach(o => {
+                if (o.customer_note) noteHtml += `<div class="order-note">📝 ${isMerged ? '#'+o.id+': ' : ''}${o.customer_note}</div>`;
+            });
+
+            // Admin note for primary order
+            let adminNoteHtml = `
+                <div class="admin-note-box">
+                    <textarea id="note-ta-${primary.store}-${primary.id}" placeholder="Add admin note..." rows="1"></textarea>
+                    <div class="note-row">
+                        <button class="btn" onclick="saveNote('${primary.store}',${primary.id})" id="note-btn-${primary.store}-${primary.id}" style="padding:3px 10px;font-size:10px">💾 Save Note</button>
+                        <span class="note-status" id="note-status-${primary.store}-${primary.id}"></span>
+                    </div>
+                </div>`;
+
+            const weightNote = combinedWeight > 0 ? `<span style="color:var(--green);font-size:10px;margin-left:6px">${isMerged ? 'combined weight' : 'from product'}</span>` : `<span style="color:var(--yellow);font-size:10px;margin-left:6px">no weight set</span>`;
+
+            let fraudBanner = '';
+            if (isFraud) {
+                const allFlags = group.flatMap(o => o.fraud_flags || []);
+                const flagList = allFlags.map(f => `<div>• ${f}</div>`).join('');
+                fraudBanner = `<div class="fraud-banner"><span>🚨 FRAUD WATCH — DO NOT SHIP</span><div class="fraud-flags">${flagList}</div></div>`;
+            }
+
+            const nextEntry = idx < renderList.length - 1 ? renderList[idx+1] : null;
+            const nextCardId = nextEntry ? nextEntry.orders.map(o => `${o.store}-${o.id}`).join('_') : '';
+
+            html += `
+            <div class="order-wrapper" id="card-${cardId}">
+                <div class="order-nav">
+                    ${nextCardId ? `<button class="order-nav-btn" title="Next order" onclick="document.getElementById('card-${nextCardId}').scrollIntoView({behavior:'smooth',block:'start'})">↓</button>` : ''}
+                    <button class="order-nav-btn" title="Jump to completed" onclick="document.getElementById('completed-container').scrollIntoView({behavior:'smooth',block:'start'})">⏬</button>
+                </div>
+                <div class="order-card${isFraud ? ' fraud' : ''}" data-customer="${primary.customer}">
+                ${fraudBanner}
+                <div class="order-head">
+                    <div>
+                        <span class="order-id">${orderIds}${badges}</span>
+                        <div class="order-customer">${primary.customer}</div>
+                        ${primary.order_count > 1 ? `<div class="order-history"><span class="repeat">${primary.order_count} orders</span> · <span class="spent">$${parseFloat(primary.total_spent || 0).toFixed(0)} lifetime</span></div>` : primary.order_count === 1 ? '<div class="order-history" style="color:var(--cyan)">New customer</div>' : ''}
+                        <div class="order-address">${primary.address.street1} ${primary.address.street2||''}<br>${primary.address.city}, ${primary.address.state} ${primary.address.zip}</div>
+                        <div class="order-email">${primary.email || ''}${primary.phone ? ' · '+primary.phone : ''}</div>
+                    </div>
+                    <div style="text-align:right">
+                        <div class="order-total">$${combinedTotal}${isMerged ? '<div style="font-size:10px;color:var(--cyan)">'+group.length+' orders combined</div>' : couponHtml(primary)}</div>
+                        <div class="order-ship-method">🚚 ${primary.ship_method}</div>
+                    </div>
+                </div>
+                <div class="order-items">${itemsHtml}</div>
+                ${noteHtml}
+                ${adminNoteHtml}
+                <div class="ship-controls">
+                    <input type="number" class="weight-input" id="wt-${primary.store}-${primary.id}" value="${combinedWeight}" min="0.1" step="0.5">
+                    <span class="oz-label">oz</span>${weightNote}
+                    <button class="btn primary" onclick="getRates('${primary.store}',${primary.id})">Get Rates</button>
+                    <button class="multibox-toggle" id="mb-toggle-${primary.store}-${primary.id}" onclick="toggleMultiBox('${primary.store}',${primary.id})">📦 Multi-Box</button>
+                </div>
+                <div class="multibox-panel" id="mb-panel-${primary.store}-${primary.id}">
+                    <div class="mb-row">
+                        <span class="mb-label">Boxes:</span>
+                        <input type="number" class="mb-input" id="mb-count-${primary.store}-${primary.id}" value="2" min="2" max="10" onchange="onBoxCountChange('${primary.store}',${primary.id})">
+                        <label style="font-size:10px;color:var(--dim);margin-left:10px;cursor:pointer"><input type="checkbox" id="mb-samedim-${primary.store}-${primary.id}" checked onchange="onBoxCountChange('${primary.store}',${primary.id})"> Same size all boxes</label>
+                    </div>
+                    <div class="mb-box-fields" id="mb-fields-${primary.store}-${primary.id}"></div>
+                    <button class="btn primary" onclick="getMultiBoxRates('${primary.store}',${primary.id})" style="font-size:12px;padding:6px 12px;margin-top:4px">📦 Get Multi-Box Rates</button>
+                </div>
+                <div id="rates-${primary.store}-${primary.id}"></div>
+            </div>
+            </div>`;
+        });
+
+        document.getElementById('orders-container').innerHTML = html;
+
+        // Auto-load rates — one per merged group, staggered
+        renderList.forEach((entry, idx) => {
+            const primary = entry.orders[0];
+            setTimeout(() => getRates(primary.store, primary.id), idx * 1500);
+        });
+    }
+
+    // Render completed section
+    renderCompleted(completedToday);
+}
+
+async function getRates(store, orderId) {
+    const weight = parseFloat(document.getElementById(`wt-${store}-${orderId}`).value);
+    const ratesDiv = document.getElementById(`rates-${store}-${orderId}`);
+    ratesDiv.innerHTML = '<div class="loading">⏳ Getting rates...</div>';
+
+    try {
+        const data = await api('/api/shipping/orders');
+        if (data.error) { ratesDiv.innerHTML = `<div style="color:var(--red)">❌ ${data.error}</div>`; return; }
+        const order = data.orders.find(o => o.store === store && o.id === orderId);
+        if (!order) { ratesDiv.innerHTML = '<div style="color:var(--red)">Order not found</div>'; return; }
+
+        const result = await api('/api/shipping/rates', {
+            method: 'POST',
+            body: JSON.stringify({ weight_oz: weight, to_address: order.address })
+        });
+
+        if (result.error) { ratesDiv.innerHTML = `<div style="color:var(--red)">❌ ${result.error}</div>`; return; }
+
+        const rates = result.rates || [];
+        if (!rates.length) { ratesDiv.innerHTML = '<div style="color:var(--dim)">No rates available</div>'; return; }
+
+        let html = '<div class="rates-grid">';
+        rates.forEach((r, i) => {
+            const cheapest = i === 0 ? ' cheapest' : '';
+            const carrierClass = r.carrier.toLowerCase().includes('usps') ? 'usps' :
+                                 r.carrier.toLowerCase().includes('fedex') ? 'fedex' :
+                                 r.carrier.toLowerCase().includes('ups') ? 'ups' : '';
+            const typeTag = r.type !== 'Standard' ? `<span class="rate-type">📨 ${r.type}</span>` : '';
+            html += `
+            <button class="rate-btn ${carrierClass}${cheapest}" onclick="shipOrder('${store}',${orderId},'${r.shipment_id}','${r.id}','${r.carrier_raw}')">
+                <span class="rate-price">$${r.rate.toFixed(2)}</span>
+                <span class="rate-carrier">${r.carrier} ${r.service}</span>
+                <span class="rate-days">${r.days||'?'}d</span>
+                ${typeTag}
+            </button>`;
+        });
+        html += '</div>';
+        ratesDiv.innerHTML = html;
+    } catch(e) {
+        ratesDiv.innerHTML = `<div style="color:var(--red)">❌ ${e.message || 'Failed to get rates'}</div>`;
+    }
+}
+
+async function shipOrder(store, orderId, shipmentId, rateId, carrier) {
+    // Find the card — could be a merged card (id contains underscore-separated order refs)
+    let card = document.getElementById(`card-${store}-${orderId}`);
+    if (!card) {
+        // Search for merged card containing this order
+        const allCards = document.querySelectorAll('.order-wrapper');
+        for (const c of allCards) {
+            if (c.id.includes(`${store}-${orderId}`)) { card = c; break; }
+        }
+    }
+    const customer = card ? card.querySelector('.order-card')?.dataset?.customer : '';
+    const ratesDiv = document.getElementById(`rates-${store}-${orderId}`);
+    if (ratesDiv) ratesDiv.innerHTML = '<div class="loading">🚀 Buying label...</div>';
+
+    // Find all order IDs in this card (for merged orders)
+    const mergedOrderIds = [];
+    if (card) {
+        const idText = card.querySelector('.order-id')?.textContent || '';
+        const matches = idText.match(/#(\d+)/g);
+        if (matches) matches.forEach(m => mergedOrderIds.push(parseInt(m.replace('#',''))));
+    }
+    if (!mergedOrderIds.length) mergedOrderIds.push(orderId);
+
+    // Ship the primary order (gets the label)
+    let result;
+    try {
+        result = await api('/api/shipping/ship', {
+            method: 'POST',
+            body: JSON.stringify({ store, order_id: orderId, shipment_id: shipmentId, rate_id: rateId, carrier })
+        });
+    } catch(e) {
+        if (ratesDiv) ratesDiv.innerHTML = `<div style="color:var(--red)">❌ Network error</div>`;
+        return;
+    }
+
+    if (result.error) {
+        if (ratesDiv) ratesDiv.innerHTML = `<div style="color:var(--red)">❌ ${result.error}</div>`;
+        return;
+    }
+
+    // Complete additional merged orders with same tracking (no duplicate label)
+    const tracking = result.tracking || '';
+    for (const extraId of mergedOrderIds) {
+        if (extraId === orderId) continue;
+        try {
+            await api('/api/shipping/complete-merged', {
+                method: 'POST',
+                body: JSON.stringify({ store, order_id: extraId, tracking, carrier })
+            });
+        } catch(e) { console.warn('Failed to complete merged order #' + extraId, e); }
+    }
+
+    // Remove the card
+    if (card) card.remove();
+
+    // Update stats
+    shippedCount += mergedOrderIds.length;
+    totalPostage += result.cost;
+    document.getElementById('stat-pending').textContent = parseInt(document.getElementById('stat-pending').textContent) - 1;
+
+    // Save label URL for reprint
+    sessionLabels[`${store}-${orderId}`] = result.label_url;
+
+    // Print — in a try/catch so it never blocks anything
+    try { printLabel(result.label_url); } catch(e) { console.error('Print failed:', e); }
+
+    // Re-fetch and render completed section
+    try {
+        const freshData = await api('/api/shipping/orders');
+        const completedToday = freshData.completed_today || [];
+        document.getElementById('stat-shipped').textContent = completedToday.length;
+        document.getElementById('stat-pending').textContent = (freshData.orders || []).length;
+        renderCompleted(completedToday);
+    } catch(e) { console.error('Refresh failed:', e); }
+}
+
+async function createScanForm() {
+    // Open window NOW (in click context) so Chrome doesn't block it
+    const win = window.open('', '_blank');
+    const result = await api('/api/shipping/scanform', { method: 'POST' });
+    if (result.error) { win.close(); alert('Error: ' + result.error); return; }
+    win.location.href = result.form_url;
+}
+
+async function printLabel(url) {
+    // Send to local print server -> Arc Label thermal printer
+    try {
+        const r = await fetch('http://127.0.0.1:9234', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({label_url: url}),
+        });
+        const data = await r.json();
+        if (data.ok) {
+            console.log('Printed to ' + data.printer);
+        } else {
+            alert('Print error: ' + (data.error || 'unknown'));
+        }
+    } catch(e) {
+        alert('Print server not running! Start "Launch Print Server.bat" on your desktop.\n\n' + e.message);
+    }
+}
+
+loadOrders();
+</script>
+</body>
+</html>
