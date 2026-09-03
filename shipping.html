@@ -158,11 +158,43 @@ body::after { content:''; position:fixed; inset:0; z-index:-1; pointer-events:no
 .order-head { display:grid; grid-template-columns:auto minmax(0,1fr) auto auto; gap:10px 20px; align-items:stretch; margin-bottom:6px; }
 .order-col-mid { justify-self:end; }
 .order-col-loyalty { align-self:stretch; min-width:0; display:flex; justify-content:center; }
-.order-col-loyalty .loyalty-row { flex:0 1 auto; min-width:0; max-width:520px; flex-direction:row; flex-wrap:wrap; align-items:center; justify-content:center; text-align:center; gap:2px 10px; margin:0; padding:5px 16px;
+.order-col-loyalty .loyalty-row { display:inline-block !important; width:auto; min-width:0; max-width:100%; text-align:center; flex-direction:row; flex-wrap:wrap; align-items:center; justify-content:center; text-align:center; gap:0 6px; margin:0; padding:4px 12px;
   background:linear-gradient(120deg, rgba(192,38,211,.55) 0%, rgba(219,39,119,.5) 38%, rgba(234,88,12,.46) 72%, rgba(202,138,4,.44) 100%);
   border:1px solid rgba(244,114,182,.55); border-radius:999px;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.25), 0 0 18px rgba(236,72,153,.28), 0 2px 8px rgba(0,0,0,.45); align-self:center; }
-.order-col-loyalty .loyalty-badge { font-size:11px; padding:2px 9px; letter-spacing:.2px; white-space:nowrap; color:#fff !important; text-shadow:0 1px 2px rgba(0,0,0,.55); background:rgba(0,0,0,.24) !important; border:1px solid rgba(255,255,255,.35) !important; animation:none !important; backdrop-filter:none; -webkit-backdrop-filter:none; }
+/* returning customers: pale card, dark type, thin red-gold-green ring */
+.order-col-loyalty .loyalty-row:not(.lr-new) {
+  background:linear-gradient(180deg,#fbf7ef 0%,#f3ece0 55%,#e9e0d1 100%) !important;
+  border:1px solid rgba(255,255,255,.9) !important; position:relative;
+  box-shadow:inset 0 1px 0 #ffffff, inset 0 -2px 0 rgba(0,0,0,.10),
+             0 0 0 1px rgba(255,255,255,.9), 0 0 0 3.5px #c0392b, 0 0 0 4.5px rgba(255,255,255,.35),0 0 0 7px #d4a017, 0 0 0 8px rgba(0,0,0,.25), 0 0 0 10.5px #1e7a45, 0 0 0 11.5px rgba(0,0,0,.45),
+             0 3px 0 rgba(0,0,0,.45), 0 7px 16px rgba(0,0,0,.6) !important; }
+.order-col-loyalty .loyalty-row:not(.lr-new) .loyalty-badge {
+  color:#3a2f22 !important; text-shadow:0 1px 0 rgba(255,255,255,.8) !important;
+  background:rgba(255,255,255,.6) !important; border:1px solid rgba(58,47,34,.28) !important; }
+.order-col-loyalty .loyalty-row:not(.lr-new) .loyalty-spend { color:#166534 !important; text-shadow:0 1px 0 rgba(255,255,255,.85) !important; }
+.order-col-loyalty .loyalty-row:not(.lr-new) .loyalty-context { color:#4a3c2c !important; text-shadow:0 1px 0 rgba(255,255,255,.8) !important; }
+.order-col-loyalty .loyalty-row:not(.lr-new) .loyalty-context span { color:#4a3c2c !important; }
+.order-col-loyalty .loyalty-row:not(.lr-new) .loyalty-context .welcome-back { color:#0e7490 !important; }
+.order-col-loyalty .loyalty-row:not(.lr-new) .loyalty-context .been-a-while { color:#b45309 !important; }
+.order-col-loyalty .loyalty-row { border-radius:999px !important; }
+.order-col-loyalty .loy-l2 { display:block; white-space:nowrap; }
+.order-col-loyalty .loy-l2 .loyalty-spend { margin-right:6px; }
+.order-col-loyalty .loy-l2 .loyalty-context { white-space:nowrap; }
+
+.order-col-loyalty .loyalty-row.lr-new { display:inline-flex !important; align-items:center; flex-wrap:nowrap; max-width:none; padding:5px 16px; gap:0 9px; white-space:nowrap; }
+.order-col-loyalty .loyalty-row.lr-new .loyalty-badge { font-size:13px !important; padding:2px 9px !important; }
+.order-col-loyalty .loyalty-row.lr-new .loyalty-badge .stars { font-size:14px; }
+.order-col-loyalty .loyalty-row.lr-new .loyalty-context { font-size:14px !important; font-weight:700; }
+.order-col-loyalty .loyalty-row.lr-new {
+  background:linear-gradient(120deg, rgba(21,128,61,.62) 0%, rgba(34,197,94,.5) 42%, rgba(132,204,22,.44) 78%, rgba(190,242,100,.4) 100%);
+  border-color:rgba(255,255,255,.75);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35), inset 0 -2px 0 rgba(0,0,0,.25),
+    0 0 0 2px #f4f7fa, 0 0 0 3px #9aa3ad, 0 0 0 4.5px #e8edf2, 0 0 0 5.5px #6c757f,
+    0 3px 0 rgba(0,0,0,.4), 0 0 18px rgba(34,197,94,.30), 0 7px 16px rgba(0,0,0,.55); }
+.order-col-loyalty .loyalty-row.lr-new .loyalty-spend { color:#eaffd5 !important; }
+.order-col-loyalty .loyalty-row.lr-new .loyalty-context .welcome-back { color:#eaffd5 !important; }
+.order-col-loyalty .loyalty-badge { display:inline-flex; font-size:11px; padding:1px 5px; letter-spacing:.2px; white-space:nowrap; color:#fff !important; text-shadow:0 1px 2px rgba(0,0,0,.55); background:rgba(0,0,0,.24) !important; border:1px solid rgba(255,255,255,.35) !important; animation:none !important; backdrop-filter:none; -webkit-backdrop-filter:none; }
 .order-col-loyalty .loyalty-badge::after { display:none; }
 .order-col-loyalty .loyalty-badge .stars { font-size:12px; animation:none !important; }
 .order-col-loyalty .loyalty-spend { font-size:13px !important; color:#fffbc7 !important; font-weight:800; text-shadow:0 1px 2px rgba(0,0,0,.6); }
@@ -267,6 +299,10 @@ body::after { content:''; position:fixed; inset:0; z-index:-1; pointer-events:no
 .order-email { font-size:14px; color:var(--cyan); opacity:.8; }
 .oe-sep { opacity:.55; }
 .order-coupon { display:inline; font-size:13px; color:var(--yellow); font-weight:600; margin-left:8px; }
+.note-blip { display:inline-block; animation:noteBlip 1.5s ease-in-out infinite; transform-origin:center;
+  filter:drop-shadow(0 0 5px rgba(250,204,21,.85)); }
+@keyframes noteBlip { 0%,100% { transform:scale(1) rotate(0deg); opacity:1; filter:drop-shadow(0 0 4px rgba(250,204,21,.6)); }
+  50% { transform:scale(1.28) rotate(-6deg); opacity:.85; filter:drop-shadow(0 0 12px rgba(250,204,21,1)); } }
 .order-note { background:rgba(250,204,21,.12); border:2px solid rgba(250,204,21,.4); padding:10px 14px; border-radius:12px; font-size:17px; color:#fff; margin:8px 0; font-weight:600; line-height:1.4; box-shadow:0 0 16px rgba(250,204,21,.1), 0 1px 0 rgba(255,255,255,.06) inset; }
 
 .admin-note-box { margin:4px 0; display:inline; }
@@ -279,13 +315,24 @@ body::after { content:''; position:fixed; inset:0; z-index:-1; pointer-events:no
 .admin-note-expand .note-row { display:flex; gap:6px; align-items:center; margin-top:4px; }
 .admin-note-expand .note-status { font-size:12px; color:var(--green); }
 
-.order-total { font-family:Georgia,'Times New Roman',serif; font-weight:700; font-size:33px; line-height:1.15;
-  text-align:center; letter-spacing:.8px; color:#f2f9ee; -webkit-text-fill-color:#f2f9ee;
-  -webkit-text-stroke:1.3px #0b5c33; paint-order:stroke fill;
-  text-shadow:1px 1px 0 #0b5c33, 2px 2px 0 #0a5631, 3px 3px 0 #09502e, 4px 4px 0 #08492a,
-              5px 5px 0 #084327, 6px 6px 0 #073d24, 7px 7px 0 #063721, 8px 8px 0 #06301d,
-              10px 11px 9px rgba(0,0,0,.6);
-  -webkit-font-smoothing:antialiased; }
+.order-total { position:relative; font-family:Georgia,'Times New Roman',serif; font-weight:700; font-size:27px;
+  line-height:1.08; text-align:center; letter-spacing:.4px; color:#0f5130; -webkit-text-fill-color:#0f5130;
+  display:inline-block; padding:4px 11px 5px 9px; border-radius:6px;
+  background:
+    repeating-linear-gradient(58deg, rgba(31,102,63,.09) 0 1px, transparent 1px 7px),
+    repeating-linear-gradient(-58deg, rgba(31,102,63,.07) 0 1px, transparent 1px 7px),
+    linear-gradient(180deg,#fbfdf7 0%,#eef5e6 55%,#e2ecd6 100%);
+  border:2px solid #3f7a45;
+  text-shadow:0 -1px 0 #ffffff, 1px 1px 0 #2a7a4c, 2px 2px 0 #1d5c39;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.9), inset 0 2px 0 #ffffff,
+             inset 0 -2px 0 rgba(63,122,69,.30),
+             0 2px 0 #2c5a33, 0 4px 0 #1f4226, 0 5px 9px rgba(0,0,0,.45);
+  -webkit-font-smoothing:antialiased; text-rendering:geometricPrecision; }
+/* engraved rule inside the edge, like the frame on a bill */
+.order-total::before { content:''; position:absolute; inset:2px; border-radius:4px;
+  border:1px solid rgba(31,102,63,.55); box-shadow:inset 0 0 0 1px rgba(255,255,255,.7); pointer-events:none; }
+.order-total::after { content:''; position:absolute; inset:4px; border-radius:3px;
+  border:1px dotted rgba(31,102,63,.4); pointer-events:none; }
 .order-ship-method { color:var(--orange); font-weight:600; font-size:13px; line-height:1.2; text-align:center; }
 
 .ship-controls { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
@@ -1148,13 +1195,13 @@ function renderLoyalty(o) {
     let tier, tierClass, stars, label, flavor;
     if (count <= 1) {
         tier = 'new'; tierClass = 'tier-new'; stars = '\u2728'; label = 'New';
-        flavor = '\ud83c\udf1f Welcome to the Tribe!';
+        flavor = '\ud83c\udf1f welcome to the tribe';
     } else if (count === 2) {
         tier = 'returning'; tierClass = 'tier-returning'; stars = '\u2b50'; label = 'Back Again';
-        flavor = '\ud83d\ude4f They came back for more!';
+        flavor = '\ud83d\ude4f back for more';
     } else if (count <= 4) {
         tier = 'returning'; tierClass = 'tier-returning'; stars = '\u2b50'; label = 'Regular';
-        flavor = '\ud83d\udd25 Building a collection';
+        flavor = '\ud83d\udd25 building a collection';
     } else if (count <= 9) {
         tier = 'loyal'; tierClass = 'tier-loyal'; stars = '\u2b50\u2b50'; label = 'Loyal';
         flavor = '\ud83d\udcaa Dedicated DT fam';
@@ -1163,7 +1210,7 @@ function renderLoyalty(o) {
         flavor = '\ud83d\udc8e True believer \u2014 hook them up!';
     } else {
         tier = 'legend'; tierClass = 'tier-legend'; stars = '\ud83c\udf1f\ud83c\udf1f\ud83c\udf1f\ud83c\udf1f'; label = 'Legend';
-        flavor = '\ud83d\ude80 OG supporter \u2014 treat them like royalty!';
+        flavor = '\ud83d\ude80 OG supporter';
     }
 
     // Badge with order count
@@ -1174,7 +1221,7 @@ function renderLoyalty(o) {
     // Money spent — always dark green money color
     let spendHtml = '';
     if (count > 1 && spent > 0) {
-        spendHtml = `<span class="loyalty-spend" style="color:#22c55e;font-size:14px">\ud83d\udcb0 ${spentStr} lifetime</span>`;
+        spendHtml = `<span class="loyalty-spend" style="color:#22c55e;font-size:14px">\ud83d\udcb0 ${spentStr}</span>`;
     }
 
     // Flavor text + time context
@@ -1200,7 +1247,7 @@ function renderLoyalty(o) {
     }
     context += '</span>';
 
-    let html = `<div class="loyalty-row">${badge}${spendHtml}${context}</div>`;
+    let html = `<div class="loyalty-row lr-${tier}">${badge}<span class="loy-l2">${spendHtml}${context}</span></div>`;
 
     return html;
 }
@@ -1783,7 +1830,7 @@ async function loadOrders(force = false) {
             // Notes from all orders
             let noteHtml = '';
             group.forEach(o => {
-                if (o.customer_note) noteHtml += `<div class="order-note">📝 ${isMerged ? '#'+o.id+': ' : ''}${o.customer_note} ${noteBinTag(o.customer_note)}</div>`;
+                if (o.customer_note) noteHtml += `<div class="order-note"><span class="note-blip">📝</span> ${isMerged ? '#'+o.id+': ' : ''}${o.customer_note} ${noteBinTag(o.customer_note)}</div>`;
             });
 
             // Admin note for primary order
