@@ -28,6 +28,10 @@ In a good run, four seconds per order. Down from a minute and a half.
 - **Fraud watch built in.** Risky orders flag with a red banner and the actual reasons listed inline.
 - **Multi-box shipping.** Tell it how many boxes, get rates per box, buy all the labels in one shot.
 - **One-tap thermal print.** Direct from dashboard to your label printer. No PDFs, no print dialogs.
+- **One row of rates.** The three rates you actually buy show up front, picked from weight, destination and whether the customer paid for priority. Everything else hides behind one button that opens instantly.
+- **Pick locations on the order.** Small metal tags on each line and each variation tell whoever is packing which shelf bin the part lives in, so a new hire can fill an order without knowing the products.
+- **Customer history at a glance.** A pill beside the name shows their tier, lifetime spend and a one-line note, so you know who you are packing for.
+- **Reads right on a phone.** The header collapses to two columns, rates go two per row, and nothing runs off the screen.
 - **End-of-day USPS SCAN form.** One button generates the pickup manifest.
 
 ---

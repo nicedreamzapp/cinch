@@ -2,176 +2,415 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>HQ — Shipping</title>
 <style>
-:root { --bg:#0a0a0f; --panel:#12121a; --border:#1e1e2e; --text:#e0e0e0; --dim:#666; --accent:#6366f1; --green:#22c55e; --red:#ef4444; --yellow:#eab308; --orange:#f97316; --blue:#3b82f6; --cyan:#22d3ee; }
+:root { --bg:#08090e; --panel:rgba(255,255,255,.04); --border:rgba(255,255,255,.07); --text:#f0f0f5; --dim:#bbb; --accent:#818cf8; --green:#4ade80; --red:#f87171; --yellow:#facc15; --orange:#fb923c; --blue:#60a5fa; --cyan:#67e8f9; --glass:rgba(255,255,255,.04); --glass-border:rgba(255,255,255,.08); --glass-highlight:rgba(255,255,255,.1); --glass-shadow:rgba(0,0,0,.4); --glass-blur:24px; }
 * { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:-apple-system,BlinkMacSystemFont,'SF Pro',system-ui,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+body { font-family:-apple-system,BlinkMacSystemFont,'SF Pro',system-ui,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; position:relative; overflow-x:hidden; }
+body::before { content:''; position:fixed; inset:0; z-index:-1; background:
+    radial-gradient(ellipse 600px 600px at 10% 20%, rgba(99,102,241,.12) 0%, transparent 70%),
+    radial-gradient(ellipse 500px 500px at 85% 40%, rgba(34,211,238,.1) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 400px at 50% 85%, rgba(139,92,246,.1) 0%, transparent 70%),
+    radial-gradient(ellipse 500px 300px at 65% 10%, rgba(249,115,22,.08) 0%, transparent 70%),
+    radial-gradient(ellipse 300px 300px at 30% 60%, rgba(34,197,94,.06) 0%, transparent 70%);
+    pointer-events:none; }
+/* Floating tribal mandalas */
+.mandala { position:fixed; z-index:-1; opacity:.06; pointer-events:none; font-size:122px; animation:mandalaSpin 60s linear infinite; }
+.mandala:nth-child(2) { animation-duration:80s; animation-direction:reverse; }
+@keyframes mandalaSpin { to { transform:rotate(360deg); } }
 
-.topbar { display:flex; align-items:center; justify-content:space-between; padding:10px 16px; background:var(--panel); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:10; }
+/* Sun */
+.sun { position:fixed; top:-30px; left:50%; transform:translateX(-50%); width:120px; height:120px; border-radius:50%; background:radial-gradient(circle, #fff700 0%, #ff6600 40%, transparent 70%); box-shadow:0 0 60px 20px rgba(255,247,0,.2), 0 0 120px 40px rgba(255,100,0,.12); z-index:0; pointer-events:none; animation:sunPulse 6s ease-in-out infinite; }
+@keyframes sunPulse { 0%,100% { box-shadow:0 0 60px 20px rgba(255,247,0,.2), 0 0 120px 40px rgba(255,100,0,.12); } 50% { box-shadow:0 0 100px 40px rgba(255,247,0,.3), 0 0 180px 60px rgba(255,100,0,.18); } }
+.sun-rays { position:fixed; top:0; left:50%; transform:translateX(-50%); width:600px; height:200px; background:radial-gradient(ellipse at 50% 0%, rgba(251,191,36,.06) 0%, transparent 70%); z-index:0; pointer-events:none; }
+
+/* Trees on borders */
+.tree-left, .tree-right { position:fixed; bottom:0; z-index:0; pointer-events:none; font-size:34px; line-height:1.4; opacity:.4; }
+.tree-left { left:4px; }
+.tree-right { right:4px; }
+.tree-sway { display:inline-block; animation:treeSway 4s ease-in-out infinite; transform-origin:bottom center; }
+.tree-sway:nth-child(2) { animation-delay:-.8s; }
+.tree-sway:nth-child(3) { animation-delay:-1.6s; }
+.tree-sway:nth-child(4) { animation-delay:-2.4s; }
+@keyframes treeSway { 0%,100% { transform:rotate(-2deg); } 50% { transform:rotate(2deg); } }
+
+.topbar { display:flex; align-items:center; justify-content:space-between; padding:12px 20px; padding-left:72px; background:rgba(8,9,14,.85); backdrop-filter:blur(var(--glass-blur)) saturate(1.5); -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(1.5); border-bottom:1px solid var(--glass-border); box-shadow:0 1px 0 var(--glass-highlight) inset, 0 4px 16px var(--glass-shadow); position:sticky; top:0; z-index:10; }
 .topbar .left { display:flex; align-items:center; gap:12px; }
-.topbar .back { color:var(--dim); text-decoration:none; font-size:13px; padding:4px 8px; border:1px solid var(--border); border-radius:6px; }
-.topbar .back:hover { color:var(--text); border-color:var(--accent); }
-.topbar h1 { font-size:18px; font-weight:700; background:linear-gradient(135deg,#e94560,#f97316); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.topbar .back { color:var(--dim); text-decoration:none; font-size:15px; padding:5px 10px; border:1px solid var(--glass-border); border-radius:20px; background:rgba(255,255,255,.06); backdrop-filter:blur(10px); transition:all .2s; }
+.topbar .back:hover { color:var(--text); border-color:rgba(255,255,255,.25); background:rgba(255,255,255,.12); }
+.topbar h1 { font-size:20px; font-weight:700; background:linear-gradient(135deg,#e94560,#f97316); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
 .topbar .right { display:flex; align-items:center; gap:12px; }
 
-.stats-bar { display:flex; gap:16px; padding:10px 16px; background:#0c0c12; border-bottom:1px solid var(--border); align-items:center; flex-wrap:wrap; }
-.stat { display:flex; align-items:center; gap:6px; font-size:12px; }
-.stat .num { font-weight:700; font-size:16px; }
-.stat .lbl { color:var(--dim); font-size:10px; text-transform:uppercase; letter-spacing:.5px; }
+.stats-bar { display:flex; gap:16px; padding:12px 20px; padding-left:72px; background:rgba(255,255,255,.04); backdrop-filter:blur(var(--glass-blur)); -webkit-backdrop-filter:blur(var(--glass-blur)); border-bottom:1px solid var(--glass-border); box-shadow:0 1px 0 rgba(255,255,255,.04) inset; align-items:center; flex-wrap:wrap; }
+.stat { display:flex; align-items:center; gap:6px; font-size:14px; }
+.stat .num { font-weight:700; font-size:18px; }
+.stat .lbl { color:var(--dim); font-size:12px; text-transform:uppercase; letter-spacing:.5px; }
 .stat.green .num { color:var(--green); }
 .stat.orange .num { color:var(--orange); }
 .stat.cyan .num { color:var(--cyan); }
 
-.page { padding:14px 16px; max-width:1100px; margin:0 auto; padding-bottom:70px; }
+.page { padding:14px 16px; max-width:1400px; margin:0 auto; padding-bottom:70px; margin-left:60px; }
 
-.order-wrapper { display:flex; gap:0; align-items:stretch; margin-bottom:10px; }
-.order-nav { display:flex; flex-direction:column; gap:8px; justify-content:center; padding:0 10px; background:var(--bg); border-radius:10px 0 0 10px; }
-.order-nav-btn { width:44px; height:44px; border-radius:50%; border:1px solid var(--border); background:var(--panel); color:var(--dim); font-size:22px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; }
-.order-nav-btn:hover { border-color:var(--accent); color:var(--text); background:#1a1a2e; }
-.order-card { background:var(--panel); border:1px solid var(--border); border-radius:0 10px 10px 0; padding:12px 14px; transition:all .3s; flex:1; position:relative; }
-.order-card:hover { border-color:#333; }
-.order-card.fraud { border:2px solid var(--red); background:#1a0a0a; }
-.fraud-banner { background:var(--red); color:#fff; font-size:11px; font-weight:700; padding:6px 10px; border-radius:6px; margin-bottom:8px; display:flex; align-items:flex-start; gap:6px; }
-.fraud-banner .fraud-flags { font-weight:400; font-size:10px; }
+.order-wrapper { display:flex; gap:0; align-items:stretch; margin-bottom:34px; position:relative; }
+.order-wrapper::after { content:""; position:absolute; left:4%; right:4%; bottom:-18px; height:1px; background:linear-gradient(90deg, transparent, rgba(255,255,255,.22), rgba(255,255,255,.34), rgba(255,255,255,.22), transparent); pointer-events:none; }
+.order-wrapper:last-child::after { display:none; }
+.order-nav { display:none; }
+.float-nav { position:fixed; left:0; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:10px; z-index:20; background:rgba(255,255,255,.06); backdrop-filter:blur(var(--glass-blur)); -webkit-backdrop-filter:blur(var(--glass-blur)); border-right:1px solid var(--glass-border); padding:10px 8px; border-radius:0 16px 16px 0; box-shadow:2px 0 12px var(--glass-shadow); width:52px; }
+.float-nav button { width:36px; height:36px; border-radius:50%; border:1px solid var(--glass-border); background:rgba(255,255,255,.06); color:var(--dim); font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .25s; }
+.float-nav button:hover { border-color:rgba(255,255,255,.25); color:var(--text); background:rgba(255,255,255,.12); }
+.order-card { background:rgba(255,255,255,.05); backdrop-filter:blur(var(--glass-blur)) saturate(1.4); -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(1.4); border:1px solid var(--glass-border); border-radius:18px; padding:14px 18px; transition:all .3s ease; flex:1; position:relative; box-shadow:0 2px 12px var(--glass-shadow), 0 1px 0 var(--glass-highlight) inset; }
+/* Glass highlight — top edge shine */
+.order-card::before { content:''; position:absolute; top:0; left:8%; right:8%; height:1px; background:linear-gradient(90deg, transparent, rgba(255,255,255,.15), rgba(255,255,255,.3), rgba(255,255,255,.15), transparent); border-radius:1px; pointer-events:none; }
+/* Subtle inner glow from top */
+.order-card::after { content:''; position:absolute; inset:0; border-radius:inherit; background:linear-gradient(180deg, rgba(255,255,255,.06) 0%, transparent 35%); pointer-events:none; }
+.order-card:hover { border-color:rgba(255,255,255,.2); box-shadow:0 4px 24px var(--glass-shadow), 0 1px 0 var(--glass-highlight) inset; transform:translateY(-1px); }
+.order-wrapper.zebra .order-card { background:rgba(34,197,94,.10); border-color:rgba(34,197,94,.38); border-left:6px solid rgba(34,197,94,.75); box-shadow:0 6px 24px rgba(0,0,0,.5), 0 0 0 1px rgba(34,197,94,.12), 0 1px 0 var(--glass-highlight) inset; }
+.order-wrapper.zebra .order-card::before { background:linear-gradient(90deg, transparent, rgba(34,197,94,.15), rgba(34,197,94,.3), rgba(34,197,94,.15), transparent); }
+.order-wrapper:not(.zebra) .order-card { background:rgba(139,92,246,.09); border-color:rgba(139,92,246,.36); border-left:6px solid rgba(139,92,246,.75); box-shadow:0 6px 24px rgba(0,0,0,.5), 0 0 0 1px rgba(139,92,246,.12), 0 1px 0 var(--glass-highlight) inset; }
+.order-wrapper:not(.zebra) .order-card::before { background:linear-gradient(90deg, transparent, rgba(139,92,246,.15), rgba(139,92,246,.3), rgba(139,92,246,.15), transparent); }
+.order-card.fraud { border:1.5px solid rgba(239,68,68,.4); background:rgba(239,68,68,.06); }
+.fraud-banner { background:rgba(239,68,68,.12); border:1px solid rgba(239,68,68,.25); color:#fca5a5; font-size:13px; font-weight:700; padding:8px 12px; border-radius:12px; margin-bottom:8px; display:flex; align-items:flex-start; gap:6px; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
+.fraud-banner .fraud-flags { font-weight:400; font-size:12px; }
 
-.order-head { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; }
-.order-id { font-size:13px; color:var(--dim); }
-.order-customer { font-size:20px; font-weight:700; color:var(--cyan); }
-.order-address { font-size:13px; color:var(--dim); margin-top:2px; }
-.order-history { font-size:12px; color:var(--dim); margin-top:4px; }
+.order-head { display:grid; grid-template-columns:auto minmax(0,1fr) auto auto; gap:10px 20px; align-items:stretch; margin-bottom:6px; }
+.order-col-mid { justify-self:end; }
+.order-col-loyalty { align-self:stretch; min-width:0; display:flex; justify-content:center; }
+.order-col-loyalty .loyalty-row { flex:0 1 auto; min-width:0; max-width:520px; flex-direction:row; flex-wrap:wrap; align-items:center; justify-content:center; text-align:center; gap:2px 10px; margin:0; padding:5px 16px;
+  background:linear-gradient(120deg, rgba(192,38,211,.55) 0%, rgba(219,39,119,.5) 38%, rgba(234,88,12,.46) 72%, rgba(202,138,4,.44) 100%);
+  border:1px solid rgba(244,114,182,.55); border-radius:999px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.25), 0 0 18px rgba(236,72,153,.28), 0 2px 8px rgba(0,0,0,.45); align-self:center; }
+.order-col-loyalty .loyalty-badge { font-size:11px; padding:2px 9px; letter-spacing:.2px; white-space:nowrap; color:#fff !important; text-shadow:0 1px 2px rgba(0,0,0,.55); background:rgba(0,0,0,.24) !important; border:1px solid rgba(255,255,255,.35) !important; animation:none !important; backdrop-filter:none; -webkit-backdrop-filter:none; }
+.order-col-loyalty .loyalty-badge::after { display:none; }
+.order-col-loyalty .loyalty-badge .stars { font-size:12px; animation:none !important; }
+.order-col-loyalty .loyalty-spend { font-size:13px !important; color:#fffbc7 !important; font-weight:800; text-shadow:0 1px 2px rgba(0,0,0,.6); }
+.order-col-loyalty .loyalty-context { display:inline; font-size:13px !important; line-height:1.2; color:#ffffff; font-style:normal; font-weight:600; text-shadow:0 1px 2px rgba(0,0,0,.6); white-space:normal; }
+.order-col-loyalty .loyalty-context span { color:inherit !important; opacity:1 !important; }
+.order-col-loyalty .loyalty-context .welcome-back { color:#cffafe !important; font-weight:700; }
+.order-col-loyalty .loyalty-context .been-a-while { color:#ffedd5 !important; font-weight:700; }
+.order-col-left { min-width:0; }
+.order-col-mid { min-width:180px; }
+.order-col-right { text-align:center; min-width:110px; max-width:150px; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:6px; }
+.order-id { font-size:15px; color:var(--dim); }
+.order-customer { font-size:20px; font-weight:700; color:var(--cyan); line-height:1.2; }
+.order-address { font-size:15px; color:var(--text); margin-top:1px; line-height:1.3; }
+.order-history { font-size:14px; color:var(--dim); margin-top:4px; }
 .order-history .spent { color:var(--green); font-weight:700; }
 .order-history .repeat { color:var(--yellow); font-weight:600; }
 
-.badge { display:inline-block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; padding:3px 10px; border-radius:10px; margin-left:6px; }
-.badge.dup { background:var(--red); color:#fff; }
-.badge.note { background:#4ade80; color:#0a0a0f; font-weight:700; }
-.badge.store { background:var(--accent); color:#fff; }
-.badge.priority { background:var(--orange); color:#fff; }
+/* Customer Loyalty Tiers */
+.loyalty-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:4px; padding:4px 0; }
+.loyalty-badge { display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:20px; font-size:13px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); box-shadow:0 1px 0 rgba(255,255,255,.04) inset; }
+.loyalty-badge .stars { letter-spacing:1px; font-size:15px; }
+.loyalty-badge .tier-label { margin-left:1px; }
+.loyalty-context { font-size:13px; color:var(--dim); font-style:italic; }
+.loyalty-context .welcome-back { color:var(--cyan); font-style:normal; font-weight:600; }
+.loyalty-context .been-a-while { color:var(--orange); font-style:normal; font-weight:600; }
+.loyalty-spend { font-size:15px; font-weight:700; }
 
-.order-items { margin:8px 0; }
-.item-row { font-size:14px; padding:4px 0; display:flex; gap:10px; align-items:flex-start; }
-.item-thumb { width:140px; height:140px; border-radius:6px; object-fit:cover; border:1px solid var(--border); flex-shrink:0; background:var(--bg); }
-.item-detail { flex:1; min-width:0; padding-top:4px; }
-.item-name-line { display:flex; align-items:baseline; gap:6px; flex-wrap:wrap; }
-.item-name { color:var(--text); }
-.item-qty { color:var(--dim); flex-shrink:0; }
-.item-price { color:var(--green); font-size:14px; flex-shrink:0; font-weight:600; }
-.item-vars { display:flex; flex-wrap:wrap; gap:5px; margin-top:6px; }
-.item-var-tag { font-size:13px; color:#93c5fd; font-weight:600; background:#0d1a2e; padding:3px 8px; border-radius:4px; white-space:nowrap; }
+/* NEW customer */
+.loyalty-badge.tier-new { background:rgba(34,211,238,.12); border:1px solid rgba(34,211,238,.3); color:var(--cyan); }
+.loyalty-badge.tier-new .stars { filter:drop-shadow(0 0 3px rgba(34,211,238,.5)); }
 
-.order-email { font-size:12px; color:var(--cyan); margin-top:2px; opacity:.8; }
-.order-coupon { display:inline; font-size:11px; color:var(--yellow); font-weight:600; margin-left:8px; }
-.order-note { background:#4ade80; border:2px solid #22c55e; padding:12px 16px; border-radius:6px; font-size:15px; color:#0a0a0f; margin:10px 0; font-weight:700; line-height:1.5; }
+/* RETURNING customer (2-4 orders) */
+.loyalty-badge.tier-returning { background:rgba(59,130,246,.12); border:1px solid rgba(59,130,246,.3); color:var(--blue); }
 
-.admin-note-box { margin:8px 0; }
-.admin-note-box textarea { width:100%; padding:6px 8px; background:#0a0a12; border:1px solid var(--border); border-radius:6px; color:var(--text); font-size:11px; font-family:inherit; resize:vertical; min-height:36px; max-height:100px; }
-.admin-note-box textarea:focus { outline:none; border-color:var(--accent); }
-.admin-note-box .note-row { display:flex; gap:6px; align-items:center; margin-top:4px; }
-.admin-note-box .note-status { font-size:10px; color:var(--green); }
+/* LOYAL customer (5-9 orders) */
+.loyalty-badge.tier-loyal { background:rgba(234,179,8,.1); border:1px solid rgba(234,179,8,.35); color:var(--yellow); }
+.loyalty-badge.tier-loyal .stars { animation:starPulse 2s ease-in-out infinite; }
 
-.order-total { color:var(--green); font-weight:700; font-size:18px; }
-.order-ship-method { color:var(--orange); font-weight:600; font-size:14px; }
+/* VIP customer (10-19 orders) */
+.loyalty-badge.tier-vip { background:linear-gradient(135deg, rgba(249,115,22,.15), rgba(234,179,8,.15)); border:1px solid rgba(249,115,22,.4); color:var(--orange); animation:vipGlow 3s ease-in-out infinite; }
 
-.ship-controls { display:flex; gap:8px; align-items:center; margin-top:10px; padding-top:10px; border-top:1px solid var(--border); }
-.weight-input { width:70px; padding:6px 8px; background:#0a0a12; border:1px solid var(--border); border-radius:6px; color:var(--text); font-size:13px; text-align:center; }
-.weight-input:focus { outline:none; border-color:var(--accent); }
-.oz-label { font-size:11px; color:var(--dim); }
-.btn { padding:8px 16px; border-radius:6px; border:1px solid var(--border); background:var(--panel); color:var(--text); font-size:14px; cursor:pointer; transition:all .2s; white-space:nowrap; }
-.btn:hover { border-color:var(--accent); background:#1a1a2e; }
-.btn.primary { background:var(--accent); border-color:var(--accent); color:#fff; }
-.btn.primary:hover { background:#5558d4; }
-.btn.success { background:var(--green); border-color:var(--green); color:#000; font-weight:700; }
-.btn:disabled { opacity:.4; cursor:default; }
+/* LEGEND customer (20+ orders) */
+.loyalty-badge.tier-legend { background:linear-gradient(135deg, rgba(239,68,68,.12), rgba(249,115,22,.12), rgba(234,179,8,.12)); border:1px solid rgba(234,179,8,.5); color:#fbbf24; animation:legendShimmer 2s linear infinite; position:relative; overflow:hidden; }
+.loyalty-badge.tier-legend::after { content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background:linear-gradient(45deg, transparent 40%, rgba(255,255,255,.08) 50%, transparent 60%); animation:legendSweep 3s linear infinite; }
 
-.rates-grid { display:flex; flex-wrap:wrap; gap:4px; margin-top:8px; }
-.rate-btn { padding:4px 8px; border-radius:4px; border:1px solid var(--border); background:#0e0e18; color:var(--text); font-size:10px; cursor:pointer; text-align:left; transition:all .15s; white-space:nowrap; }
-.rate-btn:hover { opacity:.85; }
-.rate-btn .rate-price { font-size:12px; font-weight:700; display:inline; }
-.rate-btn .rate-carrier { font-size:9px; display:inline; margin-left:4px; }
-.rate-btn .rate-days { font-size:9px; display:inline; margin-left:2px; }
-.rate-btn .rate-type { font-size:8px; color:var(--yellow); display:inline; margin-left:2px; }
-.rate-btn.cheapest { box-shadow:0 0 8px rgba(34,197,94,.2); }
-.rate-btn.usps { border-color:#1a3a6e; background:linear-gradient(135deg,#0a1a3a,#0e2450); }
-.rate-btn.usps .rate-price { color:#5b9aff; }
-.rate-btn.usps .rate-carrier { color:#3d7bd4; }
-.rate-btn.usps .rate-days { color:#7bb3ff; }
-.rate-btn.usps:hover { border-color:#2a5aae; }
-.rate-btn.fedex { border-color:#4a1a6e; background:linear-gradient(135deg,#1a0a2a,#2a1040); }
-.rate-btn.fedex .rate-price { color:#d97aff; }
-.rate-btn.fedex .rate-carrier { color:#ff8c00; }
-.rate-btn.fedex .rate-days { color:#d97aff; }
-.rate-btn.fedex:hover { border-color:#6a2a9e; }
-.rate-btn.ups { border-color:#5a3a0a; background:linear-gradient(135deg,#1a1000,#2a1a08); }
-.rate-btn.ups .rate-price { color:#ffb347; }
-.rate-btn.ups .rate-carrier { color:#8B6914; }
-.rate-btn.ups .rate-days { color:#ffd700; }
-.rate-btn.ups:hover { border-color:#8a5a1a; }
+@keyframes starPulse { 0%,100% { opacity:1; } 50% { opacity:.6; } }
+@keyframes vipGlow { 0%,100% { box-shadow:0 0 6px rgba(249,115,22,.2); } 50% { box-shadow:0 0 14px rgba(249,115,22,.4); } }
+@keyframes legendShimmer { 0%,100% { border-color:rgba(234,179,8,.5); } 33% { border-color:rgba(249,115,22,.6); } 66% { border-color:rgba(239,68,68,.5); } }
+@keyframes legendSweep { 0% { transform:translateX(-100%) rotate(45deg); } 100% { transform:translateX(100%) rotate(45deg); } }
+
+.badge { display:inline-block; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; padding:3px 10px; border-radius:20px; margin-left:6px; border:1px solid transparent; }
+.badge.dup { background:rgba(239,68,68,.15); border-color:rgba(239,68,68,.25); color:#fca5a5; }
+.badge.note { background:rgba(250,204,21,.2); border-color:rgba(250,204,21,.4); color:#fef08a; font-weight:700; animation:notePulse 1.5s ease-in-out infinite; box-shadow:0 0 10px rgba(250,204,21,.45); }
+@keyframes notePulse { 0%,100% { box-shadow:0 0 10px rgba(250,204,21,.45); transform:scale(1); } 50% { box-shadow:0 0 22px rgba(250,204,21,.85), 0 0 36px rgba(250,204,21,.35); transform:scale(1.07); background:rgba(250,204,21,.35); } }
+@keyframes noteFlash { 0%,100% { box-shadow:none; } 50% { box-shadow:0 0 8px rgba(250,204,21,.3); } }
+.badge.store { background:rgba(99,102,241,.15); border-color:rgba(99,102,241,.25); color:#a5b4fc; }
+.badge.ebay { background:rgba(239,68,68,.2); border-color:rgba(239,68,68,.4); color:#fca5a5; font-weight:700; animation:noteFlash 2s ease-in-out infinite; }
+.badge.priority { background:rgba(249,115,22,.12); border-color:rgba(249,115,22,.2); color:#fdba74; }
+
+.order-items { margin:6px 0; display:flex; flex-wrap:wrap; gap:6px; }
+.item-row { font-size:16px; padding:10px 12px; display:flex; gap:8px; align-items:center; flex:1 1 calc(50% - 6px); min-width:280px; border-radius:12px; transition:filter .2s; border-left:3px solid transparent; border:1px solid transparent; }
+.item-row:hover { filter:brightness(1.3); }
+.item-row:nth-child(8n+1) { background:rgba(59,130,246,.18); border-color:rgba(59,130,246,.3); border-left:3px solid #3b82f6; }
+.item-row:nth-child(8n+2) { background:rgba(249,115,22,.18); border-color:rgba(249,115,22,.3); border-left:3px solid #f97316; }
+.item-row:nth-child(8n+3) { background:rgba(34,197,94,.18); border-color:rgba(34,197,94,.3); border-left:3px solid #22c55e; }
+.item-row:nth-child(8n+4) { background:rgba(168,85,247,.18); border-color:rgba(168,85,247,.3); border-left:3px solid #a855f7; }
+.item-row:nth-child(8n+5) { background:rgba(239,68,68,.18); border-color:rgba(239,68,68,.3); border-left:3px solid #ef4444; }
+.item-row:nth-child(8n+6) { background:rgba(34,211,238,.18); border-color:rgba(34,211,238,.3); border-left:3px solid #22d3ee; }
+.item-row:nth-child(8n+7) { background:rgba(234,179,8,.16); border-color:rgba(234,179,8,.28); border-left:3px solid #eab308; }
+.item-row:nth-child(8n+8) { background:rgba(236,72,153,.18); border-color:rgba(236,72,153,.3); border-left:3px solid #ec4899; }
+.item-thumb { width:56px; height:56px; border-radius:10px; object-fit:cover; border:1px solid rgba(255,255,255,.1); flex-shrink:0; background:rgba(0,0,0,.2); cursor:zoom-in; box-shadow:0 2px 6px var(--glass-shadow); }
+.thumb-zoom { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:300px; height:300px; object-fit:contain; border-radius:10px; border:2px solid var(--accent); box-shadow:0 0 40px rgba(0,0,0,.8); z-index:100; pointer-events:none; background:var(--panel); }
+.item-detail { flex:1; min-width:0; }
+.item-name-line { display:flex; align-items:baseline; gap:5px; flex-wrap:wrap; }
+.item-name { color:#fff; font-size:16px; display:inline-block; background:rgba(255,255,255,.11); border:1px solid rgba(255,255,255,.16); border-radius:7px; padding:3px 9px; line-height:1.25; box-shadow:inset 0 1px 0 rgba(255,255,255,.12); }
+.bin-tags { display:inline-flex; flex-wrap:wrap; gap:6px; vertical-align:middle; }
+.bin-tag { display:inline-block; font-family:"Arial Black","Helvetica Neue",Arial,sans-serif;
+           font-size:16px; line-height:1; font-weight:900; color:#000; opacity:.75;
+           background:linear-gradient(160deg,#f3eee8 0%,#d3c9bd 28%,#a89c90 50%,#d6cdc2 72%,#f3eee8 100%);
+           border:1px solid #e8e0d6; border-radius:5px; padding:3px 8px; letter-spacing:.02em; white-space:nowrap;
+           box-shadow:inset 0 1px 0 rgba(255,255,255,.95), inset 0 -1px 0 rgba(0,0,0,.45), 0 1px 4px rgba(0,0,0,.6), 0 0 10px rgba(255,255,255,.12); }
+.bin-tag .bin-qty { opacity:.85; font-weight:700; margin-left:5px; }
+.childproof-flag { color:#ff3b3b; font-weight:900; text-shadow:0 0 6px rgba(255,59,59,.5); }
+.item-qty { color:var(--dim); flex-shrink:0; font-size:16px; }
+.item-qty-high { flex-shrink:0; font-size:17px; font-weight:800; color:#fff; background:linear-gradient(135deg,#ef4444,#f97316); padding:2px 10px; border-radius:8px; animation:qty-pulse 1.5s ease-in-out infinite; box-shadow:0 0 12px rgba(239,68,68,.5); }
+@keyframes qty-pulse { 0%,100%{ box-shadow:0 0 12px rgba(239,68,68,.5); } 50%{ box-shadow:0 0 24px rgba(239,68,68,.8),0 0 40px rgba(249,115,22,.4); } }
+.item-price { color:var(--green); font-size:16px; flex-shrink:0; font-weight:700; text-decoration:underline; text-decoration-color:rgba(74,222,128,.7); text-decoration-thickness:2px; text-underline-offset:3px; }
+.item-vars { display:flex; flex-wrap:wrap; gap:4px; margin-top:3px; }
+.item-var-tag { font-size:14px; color:#94a3b8; font-weight:400; background:rgba(99,102,241,.12); padding:2px 8px; border-radius:8px; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
+.item-var-tag .var-val { color:#fbbf24; font-weight:700; }
+
+.order-email { font-size:14px; color:var(--cyan); opacity:.8; }
+.oe-sep { opacity:.55; }
+.order-coupon { display:inline; font-size:13px; color:var(--yellow); font-weight:600; margin-left:8px; }
+.order-note { background:rgba(250,204,21,.12); border:2px solid rgba(250,204,21,.4); padding:10px 14px; border-radius:12px; font-size:17px; color:#fff; margin:8px 0; font-weight:600; line-height:1.4; box-shadow:0 0 16px rgba(250,204,21,.1), 0 1px 0 rgba(255,255,255,.06) inset; }
+
+.admin-note-box { margin:4px 0; display:inline; }
+.admin-note-toggle { padding:3px 10px; font-size:13px; border:1px solid var(--glass-border); border-radius:20px; background:rgba(255,255,255,.03); color:var(--dim); cursor:pointer; transition:all .2s; }
+.admin-note-toggle:hover { border-color:rgba(255,255,255,.2); color:var(--text); background:rgba(255,255,255,.06); }
+.admin-note-expand { display:none; margin-top:4px; }
+.admin-note-expand.open { display:block; }
+.admin-note-expand textarea { width:100%; padding:6px 8px; background:#0a0a12; border:1px solid var(--border); border-radius:6px; color:var(--text); font-size:14px; font-family:inherit; resize:vertical; min-height:36px; max-height:100px; }
+.admin-note-expand textarea:focus { outline:none; border-color:var(--accent); }
+.admin-note-expand .note-row { display:flex; gap:6px; align-items:center; margin-top:4px; }
+.admin-note-expand .note-status { font-size:12px; color:var(--green); }
+
+.order-total { color:var(--green); font-weight:800; font-size:28px; line-height:1.05; text-align:center; text-shadow:0 0 14px rgba(74,222,128,.25); }
+.order-ship-method { color:var(--orange); font-weight:600; font-size:13px; line-height:1.2; text-align:center; }
+
+.ship-controls { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.weight-input { width:70px; padding:6px 8px; background:rgba(255,255,255,.06); border:1px solid var(--glass-border); border-radius:12px; color:var(--text); font-size:16px; text-align:center; box-shadow:0 1px 0 rgba(255,255,255,.04) inset; }
+.weight-input:focus { outline:none; border-color:rgba(99,102,241,.4); box-shadow:0 0 0 3px rgba(99,102,241,.12); }
+.oz-label { font-size:14px; color:var(--dim); }
+.btn { padding:8px 18px; border-radius:20px; border:1px solid var(--glass-border); background:rgba(255,255,255,.06); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); color:var(--text); font-size:16px; cursor:pointer; transition:all .25s; white-space:nowrap; box-shadow:0 1px 0 rgba(255,255,255,.06) inset; }
+.btn:hover { border-color:rgba(255,255,255,.2); background:rgba(255,255,255,.12); box-shadow:0 1px 0 rgba(255,255,255,.08) inset, 0 2px 10px var(--glass-shadow); }
+.btn.primary { background:rgba(99,102,241,.25); border-color:rgba(99,102,241,.3); color:#c4b5fd; font-weight:600; box-shadow:0 1px 0 rgba(255,255,255,.08) inset, 0 2px 10px rgba(99,102,241,.15); }
+.btn.primary:hover { background:rgba(99,102,241,.4); border-color:rgba(99,102,241,.4); }
+.btn.success { background:rgba(34,197,94,.2); border-color:rgba(34,197,94,.25); color:#86efac; font-weight:700; box-shadow:0 1px 0 rgba(255,255,255,.08) inset; }
+.btn:disabled { opacity:.35; cursor:default; }
+
+.rates-grid { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+.rates-inline { display:contents; }
+.rates-inline .rates-grid { display:contents; }
+.rates-inline .rate-btn { padding:6px 9px; }
+.rates-inline .rates-more-btn { padding:6px 10px; }
+.ship-controls .weight-input { width:58px; }
+.rates-inline [id^="purchase-area-"] { flex-basis:100%; }
+.rates-inline [id^="purchase-area-"]:empty { display:none; }
+.rates-more { display:contents; }
+.rates-more[hidden] { display:none; }
+.rates-more-btn { padding:7px 12px; border-radius:14px; border:1px dashed rgba(255,255,255,.22); background:transparent; color:var(--dim); font-size:13px; cursor:pointer; white-space:nowrap; }
+.rates-more-btn:hover { color:var(--text); border-color:rgba(255,255,255,.4); }
+.rate-btn.recommended .rate-price { font-size:17px; }
+.rate-btn { padding:7px 12px; border-radius:14px; border:1px solid var(--glass-border); background:rgba(255,255,255,.05); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); color:var(--text); font-size:14px; cursor:pointer; text-align:left; transition:all .2s; white-space:nowrap; box-shadow:0 1px 0 rgba(255,255,255,.05) inset; }
+.rate-btn:hover { background:rgba(255,255,255,.1); border-color:rgba(255,255,255,.2); transform:translateY(-1px); box-shadow:0 1px 0 rgba(255,255,255,.06) inset, 0 4px 12px var(--glass-shadow); }
+.rate-btn .rate-price { font-size:16px; font-weight:700; display:inline; }
+.rate-btn .rate-carrier { font-size:13px; display:inline; margin-left:4px; }
+.rate-btn .rate-days { font-size:13px; display:inline; margin-left:3px; }
+.rate-btn .rate-type { font-size:12px; color:var(--orange); display:inline; margin-left:3px; }
+.rate-btn.cheapest { box-shadow:0 1px 0 rgba(255,255,255,.06) inset, 0 0 10px rgba(34,197,94,.15); border-color:rgba(34,197,94,.2); }
+.rate-btn.usps { background:rgba(59,130,246,.08); border-color:rgba(59,130,246,.15); }
+.rate-btn.usps .rate-price { color:#7bb3ff; }
+.rate-btn.usps .rate-carrier { color:#5b9aff; }
+.rate-btn.usps .rate-days { color:#93c5fd; }
+.rate-btn.usps:hover { border-color:rgba(59,130,246,.3); background:rgba(59,130,246,.12); }
+.rate-btn.fedex { background:rgba(168,85,247,.08); border-color:rgba(168,85,247,.12); }
+.rate-btn.fedex .rate-price { color:#d8b4fe; }
+.rate-btn.fedex .rate-carrier { color:#c084fc; }
+.rate-btn.fedex .rate-days { color:#d8b4fe; }
+.rate-btn.fedex:hover { border-color:rgba(168,85,247,.3); background:rgba(168,85,247,.12); }
+.rate-btn.ups { background:rgba(234,179,8,.06); border-color:rgba(234,179,8,.1); }
+.rate-btn.ups .rate-price { color:#fde68a; }
+.rate-btn.ups .rate-carrier { color:#fbbf24; }
+.rate-btn.ups .rate-days { color:#fde68a; }
+.rate-btn.ups:hover { border-color:rgba(234,179,8,.25); background:rgba(234,179,8,.1); }
+.rate-btn.selected { outline:3px solid #4ade80; outline-offset:2px; background:rgba(34,197,94,.15) !important; transform:scale(1.05); }
+.purchase-confirm { display:inline-flex; align-items:center; gap:6px; margin-left:10px; padding:8px 20px; border-radius:14px; border:2px solid #4ade80; background:rgba(34,197,94,.2); color:#4ade80; font-size:16px; font-weight:700; cursor:pointer; animation:confirmPulse 1.5s ease-in-out infinite; transition:all .2s; }
+.purchase-confirm:hover { background:rgba(34,197,94,.35); border-color:#86efac; color:#fff; }
+@keyframes confirmPulse { 0%,100% { box-shadow:0 0 0 0 rgba(74,222,128,.4); } 50% { box-shadow:0 0 12px 4px rgba(74,222,128,.25); } }
 
 /* Multi-box panel */
-.multibox-toggle { padding:4px 10px; font-size:11px; border:1px solid var(--border); border-radius:4px; background:#0e0e18; color:var(--dim); cursor:pointer; transition:all .2s; }
-.multibox-toggle:hover { border-color:var(--accent); color:var(--text); }
-.multibox-toggle.active { border-color:var(--orange); color:var(--orange); background:#1a1200; }
-.multibox-panel { display:none; margin-top:8px; padding:10px 12px; background:#0a0a14; border:1px solid var(--border); border-radius:6px; }
+.multibox-toggle { padding:4px 12px; font-size:13px; border:1px solid var(--glass-border); border-radius:20px; background:rgba(255,255,255,.04); color:var(--dim); cursor:pointer; transition:all .2s; }
+.multibox-toggle:hover { border-color:rgba(255,255,255,.2); color:var(--text); }
+.multibox-toggle.active { border-color:rgba(249,115,22,.25); color:var(--orange); background:rgba(249,115,22,.08); }
+.multibox-panel { display:none; margin-top:8px; padding:12px 14px; background:rgba(255,255,255,.03); border:1px solid var(--glass-border); border-radius:14px; }
 .multibox-panel.open { display:block; }
 .multibox-panel .mb-row { display:flex; gap:8px; align-items:center; margin-bottom:6px; flex-wrap:wrap; }
-.multibox-panel .mb-label { font-size:11px; color:var(--dim); min-width:50px; }
-.multibox-panel .mb-input { width:60px; padding:4px 6px; background:#0a0a12; border:1px solid var(--border); border-radius:4px; color:var(--text); font-size:12px; text-align:center; }
+.multibox-panel .mb-label { font-size:13px; color:var(--dim); min-width:50px; }
+.multibox-panel .mb-input { width:60px; padding:4px 6px; background:#0a0a12; border:1px solid var(--border); border-radius:4px; color:var(--text); font-size:14px; text-align:center; }
 .multibox-panel .mb-input:focus { outline:none; border-color:var(--accent); }
 .multibox-panel .mb-box-weights { display:flex; flex-wrap:wrap; gap:6px; margin:6px 0; }
 .multibox-panel .mb-box-wt { display:flex; align-items:center; gap:4px; background:#0d0d1a; padding:4px 8px; border-radius:4px; border:1px solid var(--border); }
-.multibox-panel .mb-box-wt label { font-size:10px; color:var(--orange); font-weight:600; white-space:nowrap; }
-.multibox-panel .mb-box-wt input { width:55px; padding:3px 5px; background:#0a0a12; border:1px solid var(--border); border-radius:3px; color:var(--text); font-size:12px; text-align:center; }
+.multibox-panel .mb-box-wt label { font-size:12px; color:var(--orange); font-weight:600; white-space:nowrap; }
+.multibox-panel .mb-box-wt input { width:55px; padding:3px 5px; background:#0a0a12; border:1px solid var(--border); border-radius:3px; color:var(--text); font-size:14px; text-align:center; }
 .multibox-panel .mb-box-wt input:focus { outline:none; border-color:var(--accent); }
-.rate-btn .rate-total { font-size:10px; color:var(--orange); font-weight:700; display:inline; margin-left:3px; }
+.rate-btn .rate-total { font-size:12px; color:var(--orange); font-weight:700; display:inline; margin-left:3px; }
 
 /* Completed section */
-.completed-section { margin-top:24px; border-top:1px solid var(--border); padding-top:12px; }
-.completed-section h3 { font-size:13px; color:var(--green); margin-bottom:10px; font-weight:600; }
+.completed-section { margin-top:24px; border-top:1px solid var(--glass-border); padding-top:16px; }
+.completed-section h3 { font-size:15px; color:var(--green); margin-bottom:10px; font-weight:600; }
 .completed-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-.completed-card { background:#0a150a; border:1px solid #1a3a1a; border-radius:8px; padding:10px 12px; display:flex; flex-direction:column; gap:6px; }
+.completed-card { background:rgba(34,197,94,.04); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border:1px solid rgba(34,197,94,.1); border-radius:14px; padding:12px 14px; display:flex; flex-direction:column; gap:6px; box-shadow:0 1px 0 rgba(255,255,255,.04) inset, 0 1px 4px var(--glass-shadow); }
 .cc-top { display:flex; justify-content:space-between; align-items:flex-start; }
 .cc-top .cc-left { display:flex; flex-direction:column; gap:2px; }
-.cc-id { color:var(--dim); font-size:10px; }
-.cc-name { color:var(--green); font-weight:700; font-size:13px; }
-.cc-address { color:var(--dim); font-size:10px; }
-.cc-total { color:var(--green); font-weight:700; font-size:14px; text-align:right; }
-.cc-carrier { color:var(--dim); font-size:10px; text-align:right; }
+.cc-id { color:var(--dim); font-size:12px; }
+.cc-name { color:var(--green); font-weight:700; font-size:15px; }
+.cc-address { color:var(--dim); font-size:12px; }
+.cc-total { color:var(--green); font-weight:700; font-size:16px; text-align:right; }
+.cc-carrier { color:var(--dim); font-size:12px; text-align:right; }
 .cc-items { display:flex; flex-direction:column; gap:2px; }
-.cc-item { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--text); }
+.cc-item { display:flex; align-items:center; gap:6px; font-size:13px; color:var(--text); }
 .cc-item img { width:28px; height:28px; border-radius:4px; object-fit:cover; border:1px solid #1a3a1a; }
 .cc-bottom { display:flex; justify-content:space-between; align-items:center; padding-top:4px; border-top:1px solid #1a3a1a; }
-.cc-tracking { font-family:monospace; font-size:10px; color:var(--cyan); }
-.btn.reprint { background:#0a200a; border-color:var(--green); color:var(--green); font-size:11px; padding:4px 10px; flex-shrink:0; }
-.btn.reprint:hover { background:#0f2a0f; }
-.completed-card { cursor:pointer; }
-.completed-card:hover { border-color:#2a5a2a; }
+.cc-tracking { font-family:monospace; font-size:12px; color:var(--cyan); }
+.btn.reprint { background:rgba(34,197,94,.1); border-color:rgba(34,197,94,.25); color:var(--green); font-size:13px; padding:4px 12px; flex-shrink:0; border-radius:20px; }
+.btn.reprint:hover { background:rgba(34,197,94,.18); border-color:rgba(34,197,94,.35); }
+.completed-card { cursor:pointer; transition:all .2s; }
+.completed-card:hover { border-color:rgba(34,197,94,.25); background:rgba(34,197,94,.05); }
 .cc-detail-panel { display:none; margin-top:6px; padding-top:6px; border-top:1px solid #1a3a1a; }
 .cc-detail-panel.open { display:block; }
-.cc-detail-item { display:flex; gap:8px; align-items:flex-start; padding:4px 0; font-size:11px; }
+.cc-detail-item { display:flex; gap:8px; align-items:flex-start; padding:4px 0; font-size:13px; }
 .cc-detail-item img { width:50px; height:50px; border-radius:6px; object-fit:cover; border:1px solid #1a3a1a; flex-shrink:0; }
 .cc-detail-item .cc-item-info { display:flex; flex-direction:column; gap:2px; }
 .cc-detail-item .cc-item-name { color:var(--text); }
-.cc-detail-item .cc-item-var { color:var(--yellow); font-size:10px; font-weight:600; padding-left:8px; }
-@media(max-width:700px) { .completed-grid { grid-template-columns:1fr; } }
+.cc-detail-item .cc-item-var { color:var(--yellow); font-size:12px; font-weight:600; padding-left:8px; }
 
 /* Alerts bar */
-.alerts-bar { padding:0 16px; max-width:1100px; margin:10px auto 0; }
-.alert { padding:8px 12px; border-radius:8px; font-size:12px; font-weight:600; margin-bottom:6px; display:flex; align-items:center; gap:8px; }
-.alert.warn { background:#2a1a00; border:1px solid var(--orange); color:var(--orange); }
-.alert.info { background:#0a1a2a; border:1px solid var(--blue); color:var(--blue); }
-.alert.danger { background:#2a0a0a; border:1px solid var(--red); color:var(--red); }
+.alerts-bar { padding:0 16px; max-width:1400px; margin:10px auto 0; }
+.alert { padding:10px 14px; border-radius:14px; font-size:14px; font-weight:600; margin-bottom:6px; display:flex; align-items:center; gap:8px; backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); box-shadow:0 1px 0 rgba(255,255,255,.04) inset; }
+.alert.warn { background:rgba(249,115,22,.08); border:1px solid rgba(249,115,22,.2); color:var(--orange); }
+.alert.info { background:rgba(59,130,246,.08); border:1px solid rgba(59,130,246,.2); color:var(--blue); }
+.alert.danger { background:rgba(239,68,68,.08); border:1px solid rgba(239,68,68,.2); color:var(--red); }
 
-.loading { color:var(--dim); font-size:11px; padding:4px 0; }
+.loading { color:var(--dim); font-size:13px; padding:4px 0; }
 
-.scan-form-bar { position:fixed; bottom:0; left:0; right:0; padding:10px 16px; background:var(--panel); border-top:1px solid var(--border); display:flex; justify-content:center; gap:12px; z-index:10; }
+.scan-form-bar { position:fixed; bottom:0; left:0; right:0; padding:12px 20px; background:rgba(8,9,14,.85); backdrop-filter:blur(var(--glass-blur)) saturate(1.5); -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(1.5); border-top:1px solid var(--glass-border); box-shadow:0 -1px 0 var(--glass-highlight) inset, 0 -4px 16px var(--glass-shadow); display:flex; justify-content:center; gap:12px; z-index:10; }
 
-@media(max-width:700px) {
-    .rates-grid { grid-template-columns:1fr 1fr; }
-    .ship-controls { flex-wrap:wrap; }
-    .completed-card { flex-wrap:wrap; }
+/* ── Mobile / Tablet ── */
+@media(max-width:768px) {
+    /* Hide decorations + kill heavy effects on mobile */
+    .mandala, .sun, .sun-rays, .tree-left, .tree-right { display:none; }
+    .order-card { backdrop-filter:none; -webkit-backdrop-filter:none; background:rgba(255,255,255,.06); }
+    .order-card::before, .order-card::after { display:none; }
+
+    /* Full width — no gaps on edges */
+    html, body { width:100%; overflow-x:hidden; }
+
+    /* Hide float nav — use scroll instead */
+    .float-nav { display:none; }
+
+    .page { padding:8px 6px 70px; max-width:100%; }
+
+    /* Topbar */
+    .topbar { padding:8px 10px; backdrop-filter:none; -webkit-backdrop-filter:none; background:rgba(8,9,14,.97); }
+    .topbar h1 { font-size:17px; }
+    .topbar .back { border-radius:8px; padding:4px 8px; }
+
+    /* Stats bar */
+    .stats-bar { padding:8px 10px; gap:10px; backdrop-filter:none; -webkit-backdrop-filter:none; background:rgba(8,9,14,.97); }
+    .stat .num { font-size:16px; }
+
+    /* Alerts — full width */
+    .alerts-bar { padding:0 6px; }
+    .alert { font-size:13px; padding:8px 10px; border-radius:10px; backdrop-filter:none; }
+
+    /* Order cards — stack the 3-column header */
+    .order-card { border-radius:12px; padding:10px 12px; }
+    .order-wrapper { margin-bottom:22px; }
+    .order-head { grid-template-columns:minmax(0,1fr) auto; gap:4px 10px; align-items:start; }
+    .order-col-left { grid-column:1; grid-row:1; }
+    .order-col-right { grid-column:2; grid-row:1; }
+    .order-col-loyalty { grid-column:1 / -1; grid-row:2; }
+    .order-col-mid { grid-column:1 / -1; grid-row:3; display:flex; flex-wrap:wrap; gap:0 10px; align-items:baseline; }
+    .order-address br { display:none; }
+    .order-address { font-size:13px; }
+    .order-email { font-size:13px; }
+    .order-col-loyalty { display:flex; justify-content:flex-start; }
+    .order-col-loyalty .loyalty-row { max-width:100%; padding:5px 12px; gap:2px 8px; }
+    .order-col-loyalty .loyalty-badge { font-size:10px !important; padding:2px 7px !important; }
+    .order-col-loyalty .loyalty-badge .stars { font-size:10px; }
+    .order-col-loyalty .loyalty-spend { font-size:12px !important; }
+    .order-col-loyalty .loyalty-context { font-size:11px !important; }
+    .order-col-right { text-align:right; min-width:0; max-width:150px; flex-direction:column; align-items:flex-end; justify-content:flex-start; gap:1px; }
+    .order-ship-method { text-align:right; font-size:12px; }
+    .order-customer { font-size:18px; }
+    .order-total { font-size:18px; }
+    .order-address { font-size:14px; }
+
+    /* Loyalty row — wrap tighter */
+    .loyalty-row { gap:4px; }
+    .loyalty-badge { font-size:12px; padding:2px 6px; backdrop-filter:none; border-radius:8px; }
+    .loyalty-spend { font-size:13px; }
+    .loyalty-context { font-size:12px; }
+
+    /* Items — single column, full width */
+    .order-items { flex-direction:column; }
+    .item-row { flex:1 1 100%; min-width:0; padding:6px 8px; font-size:15px; border-radius:8px; }
+    .item-thumb { width:44px; height:44px; border-radius:8px; }
+    .item-name { font-size:15px; }
+    .item-qty, .item-price { font-size:14px; }
+    .item-var-tag { font-size:12px; }
+
+    /* Ship controls — stack vertically */
+    .ship-controls { flex-direction:column; align-items:stretch; gap:6px; }
+    .ship-controls > * { width:100%; }
+    .weight-input { width:100%; border-radius:10px; }
+    .btn { text-align:center; border-radius:10px; backdrop-filter:none; }
+
+    /* Rates — 2 columns on phone */
+    .rates-grid { display:grid; grid-template-columns:1fr 1fr; gap:4px; }
+    .rates-inline { display:grid; grid-template-columns:1fr 1fr; gap:4px; width:100%; }
+    .rates-inline .rates-grid { display:contents; }
+    .ship-controls { flex-direction:row; flex-wrap:wrap; align-items:center; }
+    .ship-controls > * { width:auto; }
+    .ship-controls .weight-input { width:70px; }
+    .ship-controls .btn, .ship-controls .multibox-toggle { flex:1 1 auto; }
+    .rate-btn { font-size:13px; padding:7px 6px; text-align:center; white-space:normal; border-radius:10px; backdrop-filter:none; }
+    .rate-btn .rate-price { font-size:15px; }
+    .rate-btn .rate-carrier { font-size:12px; margin-left:2px; }
+    .rate-btn .rate-days { font-size:12px; margin-left:2px; }
+
+    /* Multi-box */
+    .multibox-panel .mb-row { flex-direction:column; align-items:stretch; gap:4px; }
+    .multibox-panel .mb-box-wt { flex-wrap:wrap; }
+
+    /* Completed section */
+    .completed-grid { grid-template-columns:1fr; }
+    .completed-card { padding:10px 12px; border-radius:12px; backdrop-filter:none; }
+    .cc-name { font-size:14px; }
+    .cc-total { font-size:15px; }
+    .cc-tracking { font-size:11px; word-break:break-all; }
+
+    /* Scan form bar */
+    .scan-form-bar { padding:8px 10px; gap:8px; }
+    .scan-form-bar .btn { font-size:14px; padding:8px 12px; }
+
+    /* Badges */
+    .badge { font-size:12px; padding:2px 6px; margin-left:3px; }
+
+    /* Notes */
+    .order-note { font-size:15px; padding:6px 10px; }
+}
+
+/* Small phones */
+@media(max-width:400px) {
+    .rates-grid { grid-template-columns:1fr; }
+    .order-customer { font-size:16px; }
+    .order-total { font-size:16px; }
+    .stats-bar { gap:6px; }
+    .stat .num { font-size:15px; }
 }
 </style>
 </head>
@@ -183,7 +422,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,'SF Pro',system-ui,sans-seri
         <h1>📦 Shipping</h1>
     </div>
     <div class="right">
-        <span style="font-size:9px;color:#333;margin-right:8px">v11</span>
+        <span style="font-size:9px;color:#333;margin-right:8px">v17.5</span>
         <span id="time" style="font-size:11px;color:var(--dim)"></span>
     </div>
 </div>
@@ -192,9 +431,21 @@ body { font-family:-apple-system,BlinkMacSystemFont,'SF Pro',system-ui,sans-seri
     <div class="stat orange"><div><span class="num" id="stat-pending">—</span><br><span class="lbl">Processing</span></div></div>
     <div class="stat green"><div><span class="num" id="stat-shipped">0</span><br><span class="lbl">Shipped Today</span></div></div>
     <div class="stat cyan"><div><span class="num" id="stat-cost">$0</span><br><span class="lbl">Postage</span></div></div>
+    <input type="text" id="orderSearch" placeholder="🔍 Search orders by #, name, address, item..." oninput="filterOrders(this.value)" style="flex:1;min-width:200px;padding:8px 14px;background:rgba(255,255,255,.06);border:1px solid var(--glass-border);border-radius:20px;color:var(--text);font-size:14px;backdrop-filter:blur(10px);outline:none">
+    <button onclick="document.getElementById('orderSearch').value='';filterOrders('')" style="padding:6px 12px;background:rgba(255,255,255,.06);border:1px solid var(--glass-border);border-radius:20px;color:var(--dim);font-size:12px;cursor:pointer">✕ Clear</button>
 </div>
 
 <div id="alerts-bar" class="alerts-bar"></div>
+<div class="sun"></div>
+<div class="sun-rays"></div>
+<div class="mandala" style="top:20%;left:8%">☸</div>
+<div class="mandala" style="top:60%;right:5%;font-size:100px">✺</div>
+<div class="tree-left"><span class="tree-sway">🌲</span><br><span class="tree-sway">🌿</span><br><span class="tree-sway">🍃</span><br><span class="tree-sway">🌲</span><br><span class="tree-sway">🌱</span><br><span class="tree-sway">🌿</span><br><span class="tree-sway">🌲</span></div>
+<div class="tree-right"><span class="tree-sway">🌲</span><br><span class="tree-sway">🍃</span><br><span class="tree-sway">🌿</span><br><span class="tree-sway">🌲</span><br><span class="tree-sway">🌱</span><br><span class="tree-sway">🌿</span><br><span class="tree-sway">🌲</span></div>
+<div class="float-nav" style="top:50%;transform:translateY(-50%)">
+    <button title="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆</button>
+    <button title="Jump to completed" onclick="document.getElementById('completed-container').scrollIntoView({behavior:'smooth',block:'start'})">⬇</button>
+</div>
 <div class="page">
     <div id="orders-container">
         <div class="loading">Loading orders...</div>
@@ -203,7 +454,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,'SF Pro',system-ui,sans-seri
 </div>
 
 <div class="scan-form-bar">
-    <button class="btn" onclick="location.reload()">🔄 Refresh</button>
+    <button class="btn" onclick="forceRefresh()">🔄 Refresh</button>
     <button class="btn primary" onclick="createScanForm()">📋 SCAN Form — <span id="scan-count">0</span> eligible</button>
 </div>
 
@@ -215,6 +466,465 @@ let shippedCount = 0;
 let totalPostage = 0;
 // Label URLs for orders we shipped this session (keyed by "store-orderId")
 let sessionLabels = {};
+// Cached order data from last loadOrders() — avoids re-fetching all 3 stores for each rate request
+let _cachedOrders = [];
+
+// ===== Shop bin map — small pick-location tags on each line item (Phase 1) =====
+// One tag per physical bin the picker has to visit. Kits explode into several.
+
+// All-glass vortex tops: XL 14mm is A43 (4mm) / A44 (5mm), XL 18mm is A46 (4mm) / A45 (5mm);
+// regular is A26-A29
+// Woo option names/values come back HTML-escaped (&amp; &#038; &nbsp;). Every bin rule matches
+// on plain text, so decode before matching or "Cup &amp; Spacers" never reads as "cup & spacers".
+function deEnt(s) {
+    return String(s || '')
+        .replace(/&amp;|&#0*38;|&#x0*26;/gi, '&')
+        .replace(/&quot;|&#0*34;/gi, '"')
+        .replace(/&#0*39;|&apos;|&#x0*27;/gi, "'")
+        .replace(/&nbsp;|&#0*160;/gi, ' ')
+        .replace(/&lt;/gi, '<').replace(/&gt;/gi, '>');
+}
+function vortexBin(xl, m18, tube5) {
+    if (xl) return m18 ? (tube5 ? 'A45' : 'A46') : (tube5 ? 'A44' : 'A43');
+    if (tube5) return m18 ? 'A28' : 'A29';
+    return m18 ? 'A26' : 'A27';
+}
+function binsFor(item) {
+    const name = deEnt((item.name || '').toLowerCase());
+    const vars = (item.variations || []).map(v => deEnt(String(v).toLowerCase()));
+    const vAll = vars.join(' | ');
+    const all = name + ' | ' + vAll;
+    const out = [];
+    const seen = new Set();
+    const add = (bin, qty) => {
+        if (!bin || seen.has(bin)) return;
+        seen.add(bin);
+        out.push({ bin: bin, qty: qty || 1 });
+    };
+    // product identity comes from the TITLE only — variations get their own tags
+    const has = (re, s) => re.test(s === undefined ? name : s);
+    const num = (re, s) => { const m = (s === undefined ? all : s).match(re); return m ? parseInt(m[1], 10) : null; };
+
+    // size / joint come from the chosen variation when there is one, otherwise from the title
+    const nameXL = (/\bxl\b|3dxl/.test(name)) && !/regular or xl|regular\/xl/.test(name);
+    const xl = /\bxl\b/.test(vAll) ? true : (/regular/.test(vAll) ? false : nameXL);
+    const m18 = /18\s?\.?8?\s?mm/.test(vAll) ? true : (/14\s?\.?4?\s?mm/.test(vAll) ? false : /18\s?\.?8?\s?mm/.test(name));
+    const m14 = !m18;
+    const tug = /\btug\b/.test(all);
+    // tube size: variation wins, then title, and XL tops default to the 5mm tube
+    const tube5 = /5\s?mm/.test(vAll) ? true
+                : (/4\s?mm/.test(vAll) ? false
+                : (/5\s?mm/.test(name) ? true : (/4\s?mm/.test(name) ? false : xl)));
+
+    // spare-parts listings: the "V5 Parts List" option says which part it actually is
+    if (/spare parts/.test(name) && vars.some(v => /parts list/.test(v))) return out;
+
+    // Quest kits and their glass tops have no bins yet — they are NOT the A26-A29 vortex tops.
+    // Blank on purpose until Matt labels them.
+    if (/\bquest\b/.test(name)) return out;
+
+    // ---- main product ----
+    if (has(/sic ball|silicon carbide ball|pearl/)) {
+        // The listing title names every size ("3mm, 4mm and 5mm ... Pearls"), so only the picked
+        // variation can say which bin. Falling back to the name tagged A24 AND A25 on a 5mm order.
+        const sz = /\b3\s?mm/.test(vAll) ? 'A24'
+                 : /\b4\s?mm/.test(vAll) ? 'A25'
+                 : /\b5\s?mm/.test(vAll) ? 'A26' : null;
+        if (sz) add(sz);
+    } else if (has(/30\s?mm/) && has(/\bbanger\b/) && !has(/carb cap|terp slurper|bottomless/)) {
+        // 30mm eNail replacement parts are THREE bins, never B12 — B12 is the SiC cup for the
+        // regular v5 heater, and it was matching only because "SIC" sits in these titles.
+        // The banger, its quartz insert and the bubble carb ship as one boxed set (D37); the
+        // polished SiC 30mm insert (D38) and the round coil (D39) are separate picks. D38 is
+        // added by the "Polished SIC for 30mm" option line so a "Without" pick stays off it.
+        add('D37');
+        if (has(/round coil/)) add('D39');
+    } else if (has(/extension cable|breakaway/)) {
+        // The title carries both lengths and both magnet types, so only the picked variations
+        // decide. Magnetic breakaway has no bin yet — it stays blank rather than guessing.
+        if (/non-?\s?magnetic/.test(vAll)) {
+            if (/40\s?cm/.test(vAll)) add('D19');
+            else if (/30\s?cm/.test(vAll)) add('D18');
+        }
+    } else if (has(/vortex top/)) {
+        // cup + top upgrade listings: if the order picked a pack size, that line carries both bins
+        const cupQtyVar = vars.some(v => /qty .*heater|heater cups?/.test(v));
+        // sizes picked in the checkout notes can't be resolved here — leave it blank
+        const byNote = vars.some(v => /mix|checkout note|see note/.test(v));
+        if (!byNote && !(has(/heater cup/) && cupQtyVar)) {
+            if (has(/heater cup/)) add(xl ? 'A10' : 'B11');
+            add(vortexBin(xl, m18, tube5));
+        }
+    } else if (tug && has(/rebuildable/)) {
+        add(/non-?rebuild|original/.test(vAll) ? 'B3' : 'B5');
+        // "Rebuildable Heater Coil w/ 2 xtra cups" — the spare Tug cups are a second stop,
+        // one pick out of B4 per cup. Plain "w/ xtra cup" with no number is one.
+        const xtraCups = vAll.match(/(\d+)\s*(?:x\s*)?(?:xtra|extra)\s*cups?/);
+        if (xtraCups) add('B4', parseInt(xtraCups[1], 10));
+        else if (/(?:xtra|extra)\s*cups?/.test(vAll)) add('B4');
+    } else if (tug && has(/non-?rebuild|original coil/)) {
+        add('B3');
+    } else if (tug && has(/spacer/)) {
+        add('B6');
+    } else if (tug && has(/cup/)) {
+        add('B4');
+    } else if (has(/quartz bucket|bucket coil/)) {
+        // Core 1.0 quartz bucket coils — must sit above the generic "core eRig" and
+        // "heater coil" branches or the line tags blank
+        add('B9.9', /qty ?2|2\s?pk|2 pack/.test(name) ? 2 : 1);   // the listing is a 2-pack
+    } else if (has(/cup and donut|cup & donut|donut heater|donut coil/)) {
+        add(has(/titanium/) ? 'D23' : 'C24');          // v4 bucket set-ups: Ti vs quartz/ceramic
+    } else if (has(/version 4|\bv4\b/) && !has(/v4\.5/) && has(/rebuildable|crucible cup/)) {
+        // the v4 kit ships as one box, cups included - one bin, nothing else.
+        // The cup bins (D20 titanium / C15 quartz) ride on the "Choose v4 Cups" variation line
+        // instead, so they also tag on kit titles like "Version 4 & iStick Pico Plus" that never
+        // reach this branch.
+    } else if (has(/rebuildable (concentrate )?heater|rebuildable ceramic heater/)) {
+        // the built XL kit lives in A16; A2 is the bare XL rebuildable heater on its own.
+        // A line that picked options (drip tip, cups, glass tops) is the built kit even when
+        // the title never says "kit" — that shipped as A2 by mistake.
+        const built = /\bkit\b/.test(name) || (item.variations || []).length > 0;
+        add(xl ? (built ? 'A16' : 'A2') : 'B10');
+    } else if (has(/non-?rebuild/) && has(/coil|heater/)) {
+        add(xl ? 'A41' : 'B3');
+    } else if (has(/heater coil/)) {
+        const coilLine = vars.some(v => /coil/.test(v));
+        if (!coilLine) {
+            if (xl) add('A2');
+            else if (has(/core 2\.0|nice dreamz/)) add('B13');
+        }
+    } else if (has(/heater cup|side (and|&) bottom heated/)) {
+        // Gen 2 cups and housings are their own parts with no bin yet — blank, never B11
+        if (has(/gen ?2/)) return out;
+        // A SiC crucible listing carries "Heater Cup" in its own title ("...Do Not Include
+        // Heater Cup") — the insert is A9/B12 and the cup is only a pick when it is included.
+        const isSic = /silicon carbide|sic (insert|crucible|cup)|polished sic/.test(name);
+        const noCup = /do not include heater cup|no heater cups?|without heater cups?/.test(all)
+                      // "2pk Just v5 Spacers only" is a spacers pick on a cups listing — no cup
+                      // leaves the shelf, so B11/A10 must not tag on this line at all
+                      || /spacers? only|just [^|]*spacers?/.test(all);
+        if (isSic) add(xl ? 'A9' : 'B12');
+        // If an option row names the heater cup, that row already carries the bin with its
+        // real count ("A10x2"). Tagging it up here too printed the same bin twice on one line,
+        // so the product row stays quiet and the counted row is the only one shown.
+        const cupVarLine = vars.some(x => /heater cup/.test(x));
+        // Lightning Pen / Quest cups are their own parts (A20.8 cups, A20.9 spacers) — the
+        // Style Cup variation line carries the bin, never B11
+        if (!noCup && !has(/lightning|quest/) && !cupVarLine) add(xl ? 'A10' : 'B11');
+    } else if (has(/silicon carbide|sic (insert|crucible|cup)|polished sic/)) {
+        // a 30mm insert is the eNail banger's, not the v5 heater cup — D38, never B12
+        add(has(/30\s?mm/) ? 'D38' : (xl ? 'A9' : 'B12'));
+    } else if (has(/o-?ring/)) {
+        add(/screw/.test(all) ? 'C16.1' : 'A11');      // screws live in their own bin
+
+    } else if (has(/glass tip|glass drip tip/)) {
+        add(m18 ? 'A12' : 'A14');
+    } else if (has(/steel drip tip/)) {
+        add('A42.9');
+    } else if (has(/core spacer/)) {
+        add('A15');
+    } else if (has(/jet\s?stream/) && has(/spacer|ceramic dish/)) {
+        add(has(/dual/, vAll) ? 'A16.2' : 'A16.1');
+    } else if (has(/v5 spacer|spacer/) && has(/v5/)) {
+        add('A13');
+    } else if (has(/cub base|base adapter/)) {
+        add('A17');
+    } else if (has(/cub shell/)) {
+        add('A18');
+    } else if (has(/xl steel top|extended v4 top/)) {
+        add('A42');
+    } else if (has(/steel top/)) {
+        // "Various Steel Tops" lists every fitment — if the order picked a Top Option, that
+        // variation line carries the real bin (a cub shell top is A18, not A21)
+        if (!vars.some(v => /top option/.test(v))) add(xl ? 'A42' : 'A21');
+    } else if (has(/grenade/)) {
+        add('A19');
+    } else if (has(/ez ?carb/)) {
+        add('D40', /qty ?2|2\s?pk|2 pack/.test(name) ? 2 : 1);   // the listing is a 2-pack
+    } else if (has(/core deluxe base|deluxe core base/)) {
+        // "Core Deluxe Base - 6 Heat Settings + Titanium XL Slide & Carb Cap" — the base itself
+        // is D25. It used to fall through to the branch below and tag A19 (a glass top) because
+        // "XL" in the slide/carb-cap half of the title flipped the xl flag.
+        add('D25');
+    } else if (has(/core.*e-?rig|e-?rig.*core|deluxe core|core deluxe/)) {
+        if (xl) add('A19');                            // XL Core eRig body
+    } else if (has(/thunder cap/)) {
+        add('A19.9');
+    } else if (has(/lightning pen/)) {
+        add('A20');
+    } else if (has(/\bv5\b|version 5/) && has(/\bkit\b/)) {
+        add(xl ? 'A16' : 'B10');                       // the built kit; its pico/battery bins come from the kit block below
+    } else if (has(/vtc6|18650/)) {
+        add('B19', /^\s*2\b|2 sony|2pk|2 pk/.test(name) ? 2 : 1);   // the listing is a 2-pack
+    } else if (has(/stash cap/)) {
+        add(has(/black/, all) ? 'B25' : 'B20.1');
+    } else if (has(/pico/)) {
+        add('B19');                                    // every pico ships with the VTC6 battery
+        // if there's a colour option, that variation line carries the mod bin instead
+        if (!vars.some(v => /^color|^colour/.test(v))) add(has(/black/, all) ? 'B24' : 'B20');
+    } else if (has(/hubble bubble|hydratube/)) {
+        if (has(/hubble bubble/)) add('B21');
+        else if (!m18) add('E41');                     // thick glass 14mm hydratube
+        if (has(/stand/) && !/no stand|without stand|no thanks/.test(all)) add('E40');
+    } else if (has(/flower bowl|glass bowl/)) {
+        const micro = has(/microdose/, all);
+        const noCarb = has(/w\/?o carb|without carb|no carb/, all);
+        if (micro && noCarb) add('C0.4');
+        else if (micro) add('C0.2');
+        else if (noCarb) add('C0.1');
+    } else if (has(/matrix bowl/) && has(/titanium/)) {
+        // the Micro Matrix is a separate part in its own bin, not the C1 Titanium Matrix Bowl
+        add(has(/micro matrix/) ? 'D30' : 'C1');
+    } else if (has(/glass adapter/)) {
+        add(m18 ? 'C3' : 'C2');
+    } else if (has(/glass slide/)) {
+        add(has(/core/) ? 'C49' : 'B15');               // window-top slides live in v5 spare parts
+    } else if (has(/bubble carb/)) {
+        add(has(/core/) ? 'C51' : 'C50');
+    } else if (has(/silicone adapter|silicon adapter/)) {
+        if (has(/green/, all)) add('B16');
+        else if (has(/white/, all)) add('B17');
+        else if (has(/black/, all)) add('B18');
+    } else if (has(/gen ?2/) && has(/dry herb|\bdc\b/) && !has(/replacement|housing|\bcup\b|wholesale/)) {
+        // Gen 2 DC kit — white D35 / black D36; a colour option line carries the bin if there is one
+        if (!vars.some(v => /^color|^colour/.test(v))) add(has(/black/, all) ? 'D36' : 'D35');
+    } else if (has(/fogger/) && has(/glass top/)) {
+        if (!vars.length) add('Z20');                  // the option line carries the bin when there is one
+    } else if (has(/fogger/)) {
+        add('Z1');                                     // the Nice Dreamz Fogger itself
+        add('B19', 2);                                 // 2 Sony VTC6 ship with every Fogger kit
+    } else if (has(/dab tool|tool set/)) {
+        add('E10');                                    // Perfect Stainless Steel dab tool set, 4 pcs
+    }
+
+    // ---- kit / bundle extras with no variation line of their own ----
+    const isKit = /kit|bundle|combo|deluxe/.test(name);
+    if (isKit && /pico/.test(name)) {
+        add('B19');                                   // Sony VTC6 ships inside the pico kits
+        if (!vars.some(v => /^color/.test(v))) add(/black/.test(vAll) ? 'B24' : 'B20');
+    }
+
+    return out;
+}
+
+// Bins for ONE variation line \u2014 these render next to that variation, not on the title
+function binsForVariation(rawVar, item) {
+    // Woo sends the option name HTML-escaped ("Cup &amp; Spacers Options") — decode first or
+    // every rule that matches on "cup & spacers" silently misses and the line loses its bins
+    const v = deEnt(String(rawVar || '').toLowerCase());
+    const name = deEnt((item.name || '').toLowerCase());
+    const val = v.includes(':') ? v.slice(v.indexOf(':') + 1).trim() : v;
+    const out = [];
+    const seen = new Set();
+    const add = (bin, qty) => { if (bin && !seen.has(bin)) { seen.add(bin); out.push({ bin: bin, qty: qty || 1 }); } };
+    const num = (re) => { const m = val.match(re); return m ? parseInt(m[1], 10) : null; };
+
+    // A parenthetical says what is NOT in the option — "Just 4pk Spacers & Hex Tool/Screws
+    // (v5 coil not included)". Test the decline words against the option WITHOUT that aside,
+    // or the qualifier silently kills the parts the customer actually bought.
+    const declineText = val.replace(/\([^)]*\)/g, ' ').trim();
+    if (/do not include|do not add|no thanks|^none|^no\b|not included/.test(declineText)) return out;
+
+    // Lightning Pen cups and spacers are their own parts — A20.7 the pen coil/tool/screws set,
+    // A20.8 cups, A20.9 spacers, never B11 (regular v5 heater) or A13 (v5 spacer).
+    if (/lightning/.test(name) && /coil|cup|spacer/.test(v + ' ' + val)) {
+        const n = num(/(\d+)\s?pk/) || num(/add (\d+)/) || num(/(\d+)\s?(x|xtra|extra|pack)/)
+                  || num(/^(\d+)\b/) || 1;
+        // "Pen Coil, Tool and Screws" ships as one bagged set out of A20.7
+        if (/coil/.test(val) && !/quest/.test(val)) add('A20.7', n);
+        else if (/cup/.test(val) && !/quest/.test(val)) add('A20.8', n);
+        // A20.9 is a PACK of spacers. "2 xtra Heater Cups and Spacers" counts the cups —
+        // the spacers ride along as one pack. Only count packs when a number sits on
+        // "spacer" itself ("2pk Spacers"), otherwise it is 1.
+        const spN = num(/(\d+)\s*(?:pk\s*|x\s*)?spacers?/) || 1;
+        if (/spacer/.test(val) && !/coil/.test(val)) add('A20.9', spN);
+        return out;
+    }
+    // Quest kits, tops and cups have no bins yet — blank until Matt labels them
+    if (/\bquest\b/.test(name)) return out;
+
+    if (/drip tip|tip option/.test(v)) {
+        // heater kits ship the steel tip pre-installed — no pick. A tops listing is a real pick.
+        // the steel drip tip is standard on the v5, the v5 XL and the v4 — never a separate pick
+        // on one of those devices, kit or heater listing. Only a tops listing is a real A42.9 pick.
+        // "Version 4 & iStick Pico Plus Power Supply" tagged A42.9 until v4 was added here.
+        const preinstalled = /rebuildable|crucible cup|heater|\bkit\b|\bv5\b|version 5|\bv4\b|version 4/.test(name)
+                             && !/\btops?\b/.test(name);
+        if (/steel/.test(val) && !preinstalled) add('A42.9');
+        if (/glass/.test(val)) add(/18\s?mm/.test(val) ? 'A12' : 'A14');
+        if (/silicone|silicon/.test(val)) {
+            if (/green/.test(val)) add('B16');
+            else if (/white/.test(val)) add('B17');
+            else add('B18');
+        }
+    }
+    // hydratube "attachment: v4/v5 Glass Attachment" is its own pick — the glass tip, sized
+    // off the size line on the same item (14mm -> A14, 18mm -> A12). E41 is the tube only.
+    if (/attachment/.test(v) && /glass/.test(val)) {
+        const sizeLine = (item.variations || []).find(x => /size/i.test(String(x))) || '';
+        add(/18\s?mm/.test(String(sizeLine).toLowerCase() + ' ' + val) ? 'A12' : 'A14');
+    }
+    // an "Accessory Options" line that names spacers/hex/screws is the same kind of pick as a
+    // cups-and-spacers line — route it through the same counting so it gets A1 + A15
+    if (/heater cups?|cups? (and|&) spacers?|qty heaters/.test(v)
+        || (/accessory option/.test(v) && /spacer|hex|screw|tool/.test(val))) {
+        // "Do Not Include Heater Cup" / "no xtra heaters" is a decline, not a pick.
+        // Use the paren-stripped text so "(v5 coil not included)" does not read as a decline.
+        if (/do not include|don't include|no xtra|no extra|\bnone\b|without/.test(declineText)) return out;
+        // Core 2.0 parts are their own bins: the cup is B1, the spacers are the A15 4-pack
+        const core = /core 2\.0|core2|nice dreamz/.test(name);
+        // count cups from a number sitting next to "cup" — a "4pk" in the same option string
+        // usually belongs to the spacers ("1 Extra Heater Cup w/ 4pk Spacers")
+        const pkIsSpacers = /\d+\s?pk\s*(?:ceramic\s*)?spacer/.test(v);
+        // "2pk Just v5 Spacers only" — the 2pk counts spacers, not cups. Nothing comes out of
+        // the cup bin on a spacers-only pick, so the count has to be suppressed entirely.
+        const spacersOnly = /spacers? only|just [^|]*spacers?/.test(val);
+        const cups = spacersOnly ? null : (
+                     num(/(\d+)\s*(?:extra\s*)?(?:xl\s*)?heater cups?/, v)
+                     || (pkIsSpacers ? null : num(/(\d+)\s?pk/))
+                     || num(/add (\d+)/) || num(/(\d+)\s?(x|pack)/)
+                     || num(/(\d+)\s?extra/) || (/cup/.test(val) ? 1 : null));
+        // a cup listing means real XL cups (A10); a kit that merely adds cups means B11
+        // an XL listing's cups are XL cups (A10) no matter how the option row is worded —
+        // "Heater Cups & Spacers" on an XL heater tagged B11 (regular v5 cups) by mistake
+        const cupBin = (/\bxl\b/.test(v) || /\bxl\b/.test(name)) ? 'A10' : 'B11';
+        // the hex tool and screws ride along in some accessory options
+        if (/hex tool|tool\/screw|hex\/|\bscrews?\b/.test(v)) add('A1');
+        if (cups) {
+            add(cupBin, cups);
+            // the cup + top upgrade ships a top with every cup — but if the order has its own
+            // glass-top option line, that line carries the top bin instead
+            const topLine = (item.variations || []).some(x => /glass top|top option/i.test(String(x)));
+            if (!topLine && /heater cup/.test(name) && /vortex top/.test(name)) {
+                const xln = /\bxl\b/.test(name);
+                const m18n = /18\s?mm/.test(v + ' ' + name);
+                const t5 = /5\s?mm/.test(v) ? true : (/4\s?mm/.test(v) ? false : xln);
+                add(vortexBin(xln, m18n, t5), cups);
+            }
+        }
+        // "1 v5 spacer" — the v5 must be swallowed or /(\d+)\s?spacer/ reads the 5 as the count
+        const sp = num(/(\d+)\s*(?:pk\s*)?(?:x\s*)?(?:v5\s*)?spacer/);
+        // a Core listing's "4pk spacers" is ONE A15 pack, not 4 loose v5 spacers
+        if (sp) add(core ? 'A15' : 'A13', core ? 1 : sp);
+    }
+    // a Top Option that names a steel/cub top is not a glass top — it carries its own bin
+    if (/top option/.test(v)) {
+        if (/cub shell|shell top/.test(val)) { add('A18'); return out; }
+        if (/steel/.test(val)) { add(/\bxl\b/.test(val) ? 'A42' : 'A21'); return out; }
+    }
+    // "Choose v4 Cups" — the cups are the pick, on the bare v4 heater AND on the pico kit.
+    // Titanium is D20, quartz is C15; a mixed pick names both.
+    if (/v4 cups|version 4 cups/.test(v)) {
+        if (/titanium|all ti\b/.test(val)) add('D20');
+        if (/quartz/.test(val)) add('C15');
+        return out;
+    }
+    if (/hubble/.test(v) && /include|add|yes/.test(val)) add('B21');
+    if (/parts list/.test(v)) {
+        if (/screw|hex|tool/.test(val)) add('A1');
+        else if (/glass slide/.test(val)) add('B15');
+        else if (/o-?ring/.test(val)) add('A11');
+        else if (/spacer/.test(val)) add('A13');
+        return out;
+    }
+    // paren-stripped on both sides: "(v5 coil not included)" is a note about what is missing,
+    // not an instruction to pick a coil — "included" there must not read as "include"
+    if (/coil/.test(v.replace(/\([^)]*\)/g, ' ')) && /include|add|yes/.test(declineText)) {
+        const xlc = /\bxl\b/.test(v) || /\bxl\b/.test(val);
+        if (/non-?rebuild/.test(v + ' ' + val)) add(xlc ? 'A41' : 'B3');
+        else if (xlc) add('A2');                       // "Include XL Heater Coil" = the XL v5 heater
+        else if (/rebuild/.test(v)) add('B10');
+        else if (/core 2\.0|nice dreamz/.test(v + ' ' + name)) add('B13');
+    }
+    if (/stash cap/.test(v) && /add|yes|black|silver/.test(val)) add(/black/.test(val) ? 'B25' : 'B20.1');
+    if (/^color|^colour/.test(v) && /gen ?2/.test(name) && !/replacement|housing/.test(name)) {
+        add(/black/.test(val) ? 'D36' : 'D35'); return out;
+    }
+    // "Pico Plus Stash Cap" carries "pico" in its title but it is a cap, not a mod — its colour
+    // option was tagging the black Pico bin (B24) on a $20 stash cap. The product row owns it.
+    if (/^color|^colour/.test(v) && /pico/.test(name) && !/stash cap/.test(name)) {
+        add(/black/.test(val) ? 'B24' : (/silver/.test(val) ? 'B8' : 'B20'));
+    }
+    if (/adapter/.test(v) && /silicone|silicon/.test(v + name)) {
+        if (/green/.test(val)) add('B16');
+        else if (/white/.test(val)) add('B17');
+        else if (/black/.test(val)) add('B18');
+    }
+    if (/o-?ring/.test(v)) add(/screw/.test(val) ? 'C16.1' : 'A11');
+    // "Polished SIC for 30mm: With Polished SIC Insert" is the 30mm banger insert (D38), not
+    // B12 (the SiC cup for the regular v5 heater). "Without ..." is a decline, not a pick.
+    if (/sic|silicon carbide/.test(v) && /add|yes|insert|cup/.test(val) && !/without/.test(val)) {
+        if (/30\s?mm/.test(v + ' ' + name)) add('D38');
+        else add(/\bxl\b/.test(v + ' ' + name) ? 'A9' : 'B12');
+    }
+    if (/spacer/.test(val) && /core/.test(name)) add('A15');
+    // Core 2.0 replacement glass tops are their own listing — not vortex tops
+    if (/glass top|top option/.test(v) && /core/.test(name)) {
+        if (/standard|stock/.test(val)) add('C17');
+        return out;
+    }
+    // the Nice Dreamz Fogger glass top is its own part — never a vortex top bin
+    if (/fogger/.test(v + ' ' + val + ' ' + name) && /glass top/.test(v + ' ' + val)) { add('Z20'); return out; }
+    if (/glass top|top option|vortex/.test(v)) {
+        if (/mix|checkout note|see note/.test(val)) return out;   // read the customer note instead
+        const key = v.includes(':') ? v.slice(0, v.indexOf(':')) : v;
+        if (/qty/.test(key) && !/mm/.test(val)) return out;       // a quantity line, not a size pick
+        if ((item.variations || []).some(x => /mix|checkout note|see note/i.test(String(x)))) return out;
+        const xlv = /\bxl\b/.test(v) || (/\bxl\b/.test(name) && !/regular or xl|regular\/xl/.test(name));
+        const m18v = /18\s?mm/.test(val);
+        const t5v = /5\s?mm/.test(val) ? true : (/4\s?mm/.test(val) ? false : xlv);
+        const n = num(/(\d+)\s?pk/) || num(/(\d+)\s?(x|pack)/) || 1;
+        add(vortexBin(xlv, m18v, t5v), n);
+    }
+    if (/battery|18650|vtc6/.test(v) && /add|yes|include|sony/.test(val)) add('B19');
+    return out;
+}
+
+// Customer notes name parts too ("mix of ceramic and titanium", "14mm glass top"),
+// so tag the note itself — that is where the real pick lives on special requests.
+function noteBins(text) {
+    const t = String(text || '').toLowerCase();
+    const out = [];
+    const seen = new Set();
+    const add = (bin) => { if (bin && !seen.has(bin)) { seen.add(bin); out.push({ bin: bin, qty: 1 }); } };
+    if (!t) return out;
+
+    if (/titanium/.test(t)) add('D23');
+    if (/ceramic|quartz/.test(t)) add('C24');
+    if (/screw/.test(t)) add('C16.1');
+    if (/o-?ring/.test(t)) add('A11');
+    if (/top|mouthpiece|vortex/.test(t)) {
+        const xl = /\bxl\b/.test(t);
+        // "both with 5mm tubes" names the tube size — then "both" means both joints, not both tubes
+        const tubeNamed = /5\s?mm|4\s?mm/.test(t);
+        const t5 = /5\s?mm/.test(t) ? true : (/4\s?mm/.test(t) ? false : xl);
+        const both = !tubeNamed && /each|both|two sizes|2 sizes/.test(t);
+        if (/14\s?mm/.test(t)) { add(vortexBin(xl, false, t5)); if (both) add(vortexBin(xl, false, !t5)); }
+        if (/18\s?mm/.test(t)) { add(vortexBin(xl, true, t5)); if (both) add(vortexBin(xl, true, !t5)); }
+    }
+    return out;
+}
+
+function noteBinTag(text) {
+    try { return binTagList(noteBins(text), 1); } catch (e) { return ''; }
+}
+
+function binTagList(bins, mult) {
+    if (!bins || !bins.length) return '';
+    const m = mult && mult > 1 ? mult : 1;
+    return '<span class="bin-tags">' + bins.map(b => {
+        const q = b.qty * m;
+        return `<span class="bin-tag">${b.bin}${q > 1 ? `<span class="bin-qty">\u00d7${q}</span>` : ''}</span>`;
+    }).join('') + '</span>';
+}
+
+function binTag(item) {
+    try { return binTagList(binsFor(item), item.qty); } catch (e) { return ''; }
+}
+
+function varBinTag(rawVar, item) {
+    try { return binTagList(binsForVariation(rawVar, item), item.qty); } catch (e) { return ''; }
+}
 
 function updateTime() {
     const d = new Date();
@@ -244,16 +954,35 @@ function renderCompleted(completedToday) {
 
     let html = '<div class="completed-section"><h3>✅ Completed Today (' + completedToday.length + ')</h3><div class="completed-grid">';
     completedToday.forEach((c, idx) => {
-        const labelUrl = sessionLabels[`${c.store}-${c.id}`] || c.label_url || '';
-        const isEasypost = labelUrl && (labelUrl.includes('easypost') || sessionLabels[`${c.store}-${c.id}`]);
-        const reprintBtn = isEasypost
-            ? `<button class="btn reprint" onclick="event.stopPropagation();printLabel('${labelUrl}')">🖨️ Reprint</button>`
-            : '';
+        // Build tracking + reprint for all boxes
+        const allTracking = c.all_tracking || (c.tracking ? [{ tracking: c.tracking, carrier: c.carrier }] : []);
+        const allLabels = c.all_label_urls || (c.label_url ? [c.label_url] : []);
+        const sessionLabel = sessionLabels[`${c.store}-${c.id}`];
+
+        let trackingHtml = '';
+        let reprintHtml = '';
+        if (allTracking.length > 1) {
+            allTracking.forEach((t, i) => {
+                trackingHtml += `<div style="font-size:11px;margin-bottom:2px"><span style="color:var(--dim)">${t.carrier || ''}</span> ${t.tracking}</div>`;
+            });
+            allLabels.forEach((url, i) => {
+                if (url && url.includes('easypost')) {
+                    reprintHtml += `<button class="btn reprint" onclick="event.stopPropagation();printLabel('${url}')" style="margin:2px">🖨️ Box ${i+1}</button>`;
+                }
+            });
+        } else {
+            trackingHtml = allTracking.length ? allTracking[0].tracking : 'no tracking';
+            const labelUrl = sessionLabel || (allLabels.length ? allLabels[0] : '') || c.label_url || '';
+            const isEasypost = labelUrl && (labelUrl.includes('easypost') || sessionLabel);
+            reprintHtml = isEasypost
+                ? `<button class="btn reprint" onclick="event.stopPropagation();printLabel('${labelUrl}')">🖨️ Reprint</button>`
+                : '';
+        }
 
         let itemsSummary = '';
         (c.items || []).forEach(i => {
             const thumb = i.image ? `<img src="${i.image}" alt="">` : '';
-            itemsSummary += `<div class="cc-item">${thumb}<span>${i.name} ×${i.qty}</span></div>`;
+            itemsSummary += `<div class="cc-item">${thumb}<span>${i.name.replace(/(?<!not )CHILDPROOF/gi,'<span class="childproof-flag">CHILDPROOF</span>')} ×${i.qty}</span></div>`;
         });
 
         let detailHtml = '';
@@ -263,7 +992,7 @@ function renderCompleted(completedToday) {
             (i.variations || []).forEach(v => {
                 varsHtml += `<div class="cc-item-var">↳ ${v}</div>`;
             });
-            detailHtml += `<div class="cc-detail-item">${thumb}<div class="cc-item-info"><span class="cc-item-name">${i.name} ×${i.qty}</span>${varsHtml}</div></div>`;
+            detailHtml += `<div class="cc-detail-item">${thumb}<div class="cc-item-info"><span class="cc-item-name">${i.name.replace(/(?<!not )CHILDPROOF/gi,'<span class="childproof-flag">CHILDPROOF</span>')} ×${i.qty}</span>${varsHtml}</div></div>`;
         });
 
         const storeBadge = c.store !== 'ineedhemp' ? `<span class="badge store" style="margin-left:0">${c.store_label}</span>` : '';
@@ -283,8 +1012,8 @@ function renderCompleted(completedToday) {
             </div>
             <div class="cc-items">${itemsSummary}</div>
             <div class="cc-bottom">
-                <span class="cc-tracking">${c.tracking || 'no tracking'}</span>
-                ${reprintBtn}
+                <span class="cc-tracking">${trackingHtml}</span>
+                ${reprintHtml}
             </div>
             <div class="cc-detail-panel" id="detail-${idx}">
                 ${detailHtml}
@@ -293,6 +1022,119 @@ function renderCompleted(completedToday) {
     });
     html += '</div></div>';
     container.innerHTML = html;
+}
+
+function formatOrderDate(dateStr) {
+    if (!dateStr) return '';
+    // Server sends date_*_gmt (true UTC, no suffix) - append Z, then render in Pacific.
+    const d = new Date(dateStr + 'Z');
+    if (isNaN(d)) return '';
+    const opts = { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'America/Los_Angeles', timeZoneName: 'short' };
+    return d.toLocaleString('en-US', opts);
+}
+
+function renderLoyalty(o) {
+    const completedCount = o.order_count || 0;
+    const count = completedCount + 1;
+    const spent = parseFloat(o.total_spent || 0) + parseFloat(o.total || 0);
+    const spentStr = '$' + Math.round(spent).toLocaleString('en-US');
+    const lastDate = o.last_order_date ? new Date(o.last_order_date + 'Z') : null;
+    const now = new Date();
+    const daysSince = lastDate ? Math.floor((now - lastDate) / 86400000) : null;
+
+    let tier, tierClass, stars, label, flavor;
+    if (count <= 1) {
+        tier = 'new'; tierClass = 'tier-new'; stars = '\u2728'; label = 'New';
+        flavor = '\ud83c\udf1f Welcome to the Tribe!';
+    } else if (count === 2) {
+        tier = 'returning'; tierClass = 'tier-returning'; stars = '\u2b50'; label = 'Back Again';
+        flavor = '\ud83d\ude4f They came back for more!';
+    } else if (count <= 4) {
+        tier = 'returning'; tierClass = 'tier-returning'; stars = '\u2b50'; label = 'Regular';
+        flavor = '\ud83d\udd25 Building a collection';
+    } else if (count <= 9) {
+        tier = 'loyal'; tierClass = 'tier-loyal'; stars = '\u2b50\u2b50'; label = 'Loyal';
+        flavor = '\ud83d\udcaa Dedicated DT fam';
+    } else if (count <= 19) {
+        tier = 'vip'; tierClass = 'tier-vip'; stars = '\u2b50\u2b50\u2b50'; label = 'VIP';
+        flavor = '\ud83d\udc8e True believer \u2014 hook them up!';
+    } else {
+        tier = 'legend'; tierClass = 'tier-legend'; stars = '\ud83c\udf1f\ud83c\udf1f\ud83c\udf1f\ud83c\udf1f'; label = 'Legend';
+        flavor = '\ud83d\ude80 OG supporter \u2014 treat them like royalty!';
+    }
+
+    // Badge with order count
+    let badge = `<div class="loyalty-badge ${tierClass}"><span class="stars">${stars}</span><span class="tier-label">${label}</span>`;
+    if (count > 1) badge += `<span style="opacity:.7;font-weight:400;margin-left:3px">\xb7 ${count} orders</span>`;
+    badge += '</div>';
+
+    // Money spent — always dark green money color
+    let spendHtml = '';
+    if (count > 1 && spent > 0) {
+        spendHtml = `<span class="loyalty-spend" style="color:#22c55e;font-size:14px">\ud83d\udcb0 ${spentStr} lifetime</span>`;
+    }
+
+    // Flavor text + time context
+    let context = `<span class="loyalty-context" style="font-size:12px">`;
+    if (count <= 1) {
+        context += `<span class="welcome-back">${flavor}</span>`;
+    } else {
+        context += `<span style="color:var(--text)">${flavor}</span>`;
+        if (daysSince !== null) {
+            if (daysSince > 365) {
+                const yrs = Math.floor(daysSince / 365);
+                context += ` <span class="been-a-while">\u23f3 ${yrs}+ yr${yrs>1?'s':''} since last order!</span>`;
+            } else if (daysSince > 180) {
+                context += ` <span class="been-a-while">\u23f3 ${Math.floor(daysSince/30)} months away</span>`;
+            } else if (daysSince > 60) {
+                context += ` \u00b7 ${Math.floor(daysSince/30)}mo ago`;
+            } else if (daysSince > 14) {
+                context += ` \u00b7 ${Math.floor(daysSince/7)}wk ago`;
+            } else if (daysSince > 0) {
+                context += ` \u00b7 <span style="color:#22c55e">${daysSince}d ago \u2014 on a roll!</span>`;
+            }
+        }
+    }
+    context += '</span>';
+
+    let html = `<div class="loyalty-row">${badge}${spendHtml}${context}</div>`;
+
+    return html;
+}
+
+function shortRate(carrier, service) {
+    const c = carrier.toUpperCase();
+    const s = service || '';
+    // Strip carrier name from service since color already shows it
+    let label = s.replace(/^USPS\s*/i,'').replace(/^UPS\s*/i,'').replace(/^FedEx\s*/i,'');
+    if (/padded/i.test(label)) return 'Padded Env';
+    if (/legal/i.test(label)) return 'Legal Env';
+    if (/flat ?rate ?envelope/i.test(label)) return 'Flat Env';
+    if (/medium ?flat/i.test(label)) return 'Med Box';
+    if (/large ?flat/i.test(label)) return 'Large Box';
+    // Abbreviate common services
+    const map = {
+        'GroundAdvantage': 'Ground',
+        'Ground': 'Ground',
+        'Priority': 'Priority',
+        'PriorityMailInternational': 'Intl Priority',
+        'Priority (Flat Rate Envelope)': 'Flat Env',
+        'Priority (Flat Rate  Envelope)': 'Flat Env',
+        'Priority (Flat Rate Padded Envelope)': 'Padded Env',
+        'Priority (Flat Rate  Padded Envelope)': 'Padded Env',
+        'Priority (Med Flat Rate Box)': 'Med Box',
+        'Priority (Flat Rate Legal Envelope)': 'Legal Env',
+        'Priority (Flat Rate  Legal Envelope)': 'Legal Env',
+        '3DaySelect': '3-Day',
+        '3 Day Select': '3-Day',
+        '2ndDayAir': '2-Day Air',
+        '2nd Day Air': '2-Day Air',
+        'FEDEX_GROUND': 'Ground',
+        'FEDEX_EXPRESS_SAVER': '3-Day',
+        'FEDEX_2_DAY': '2-Day',
+        'GROUND_HOME_DELIVERY': 'Home',
+    };
+    return map[label] || map[s] || label || s;
 }
 
 function couponHtml(o) {
@@ -408,9 +1250,8 @@ async function getMultiBoxRates(store, orderId) {
     ratesDiv.innerHTML = `<div class="loading">⏳ Getting rates for ${count} boxes...</div>`;
 
     try {
-        const data = await api('/api/shipping/orders');
-        if (data.error) { ratesDiv.innerHTML = `<div style="color:var(--red)">❌ ${data.error}</div>`; return; }
-        const order = data.orders.find(o => o.store === store && o.id === orderId);
+        // Use cached order data — no need to re-fetch all 3 stores
+        const order = _cachedOrders.find(o => o.store === store && o.id === orderId);
         if (!order) { ratesDiv.innerHTML = '<div style="color:var(--red)">❌ Order not found</div>'; return; }
 
         const sameDim = document.getElementById(`mb-samedim-${store}-${orderId}`).checked;
@@ -500,7 +1341,7 @@ async function getMultiBoxRates(store, orderId) {
                 html += `
                 <button class="rate-btn ${carrierClass}${cheapest}" onclick="selectBoxRate('${store}',${orderId},${bi},this)" data-rate-info="${rateData}" style="position:relative">
                     <span class="rate-price">$${r.rate.toFixed(2)}</span>
-                    <span class="rate-carrier">${r.carrier} ${r.service}</span>
+                    <span class="rate-carrier">${shortRate(r.carrier, r.service)}</span>
                     <span class="rate-days">${r.days||'?'}d</span>
                     ${typeTag}
                 </button>`;
@@ -592,10 +1433,9 @@ async function buyMultiBoxLabels(store, orderId) {
     document.getElementById('stat-pending').textContent = parseInt(document.getElementById('stat-pending').textContent) - 1;
 
     // Print all labels
-    if (result.label_urls) {
-        result.label_urls.forEach(url => { try { printLabel(url); } catch(e) {} });
-    } else if (result.label_url) {
-        try { printLabel(result.label_url); } catch(e) {}
+    const allUrls = result.all_label_urls || (result.label_url ? [result.label_url] : []);
+    for (const url of allUrls) {
+        if (url) { try { await printLabel(url); } catch(e) { console.error('Print failed:', e); } }
     }
 
     try {
@@ -656,18 +1496,44 @@ async function shipMultiBox(store, orderId, carrier, btnEl) {
     } catch(e) { console.error('Refresh failed:', e); }
 }
 
-async function loadOrders() {
-    const data = await api('/api/shipping/orders');
+async function forceRefresh() {
+    document.getElementById('orders-container').innerHTML = '<div class="loading">🔄 Refreshing from all stores...</div>';
+    await loadOrders(true);
+}
+
+async function loadOrders(force = false) {
+    const url = force ? '/api/shipping/orders?force=1' : '/api/shipping/orders';
+    const data = await api(url);
     const orders = data.orders || [];
+    _cachedOrders = orders;
     const completedToday = data.completed_today || [];
 
     document.getElementById('stat-pending').textContent = orders.length;
     document.getElementById('stat-shipped').textContent = completedToday.length;
     document.getElementById('scan-count').textContent = data.easypost_count || 0;
 
+    // Key used to merge orders into one shipment. Two orders merge ONLY when they
+    // share BOTH the customer identity AND the destination address — because the
+    // whole point of merging is "same buyer, same box, same place."
+    //   - identity  = eBay BuyerUserID (group_key) or Woo email
+    //   - a blank/unreliable identity (e.g. eBay's always-blank email) is forced
+    //     unique so such orders can NEVER merge with anything.
+    // This makes shipping different customers to one address, or one customer to
+    // two addresses, structurally impossible to merge by accident.
+    function keyOf(o){
+        let id;
+        if (o.group_key) id = String(o.group_key).toLowerCase();
+        else { const e = (o.email || '').trim().toLowerCase(); id = e || ('__solo__:' + o.store + ':' + o.id); }
+        // Solo identities are already unique — never fold in address.
+        if (id.startsWith('__solo__') || id.startsWith('ebay-solo:')) return id;
+        const a = o.address || {};
+        const dest = ((a.street1 || '') + '|' + (a.zip || '')).trim().toLowerCase();
+        return id + '::' + dest;
+    }
+
     // Build alerts summary
     const emailCount = {};
-    orders.forEach(o => { emailCount[o.email.toLowerCase()] = (emailCount[o.email.toLowerCase()]||0)+1; });
+    orders.forEach(o => { emailCount[keyOf(o)] = (emailCount[keyOf(o)]||0)+1; });
     const dupes = new Set(Object.entries(emailCount).filter(([_,c])=>c>1).map(([e])=>e));
 
     let alertsHtml = '';
@@ -681,8 +1547,8 @@ async function loadOrders() {
 
     // Duplicate customers
     if (dupes.size) {
-        const dupNames = orders.filter(o => dupes.has(o.email.toLowerCase()))
-            .reduce((acc, o) => { acc[o.email.toLowerCase()] = acc[o.email.toLowerCase()] || {name: o.customer, ids: []}; acc[o.email.toLowerCase()].ids.push('#'+o.id); return acc; }, {});
+        const dupNames = orders.filter(o => dupes.has(keyOf(o)))
+            .reduce((acc, o) => { acc[keyOf(o)] = acc[keyOf(o)] || {name: o.customer, ids: []}; acc[keyOf(o)].ids.push('#'+o.id); return acc; }, {});
         const dupList = Object.values(dupNames).map(d => `<strong>${d.name}</strong> (${d.ids.join(', ')})`).join(' · ');
         alertsHtml += `<div class="alert danger">⚠️ DUPLICATE CUSTOMERS — ship together: ${dupList}</div>`;
     }
@@ -718,13 +1584,13 @@ async function loadOrders() {
             const bFraud = (b.fraud_flags && b.fraud_flags.length > 0) ? 1 : 0;
             if (aFraud !== bFraud) return bFraud - aFraud;
 
-            const aDup = dupes.has(a.email.toLowerCase()) ? 1 : 0;
-            const bDup = dupes.has(b.email.toLowerCase()) ? 1 : 0;
+            const aDup = dupes.has(keyOf(a)) ? 1 : 0;
+            const bDup = dupes.has(keyOf(b)) ? 1 : 0;
             if (aDup !== bDup) return bDup - aDup;
 
-            // Group duplicate customers together by email
+            // Group duplicate customers together by identity key
             if (aDup && bDup) {
-                const cmp = a.email.toLowerCase().localeCompare(b.email.toLowerCase());
+                const cmp = keyOf(a).localeCompare(keyOf(b));
                 if (cmp !== 0) return cmp;
             }
 
@@ -739,11 +1605,11 @@ async function loadOrders() {
             return a.id - b.id;
         });
 
-        // Group duplicate customer orders by email
+        // Group duplicate customer orders by identity key
         const grouped = {};
         const soloOrders = [];
         orders.forEach(o => {
-            const email = o.email.toLowerCase();
+            const email = keyOf(o);
             if (dupes.has(email)) {
                 if (!grouped[email]) grouped[email] = [];
                 grouped[email].push(o);
@@ -774,7 +1640,8 @@ async function loadOrders() {
             let badges = '';
             if (isFraud) badges += '<span class="badge dup">🚨 FRAUD</span>';
             if (isMerged) badges += '<span class="badge dup">MERGED</span>';
-            if (primary.store !== 'ineedhemp') badges += `<span class="badge store">${primary.store_label}</span>`;
+            if (primary.is_ebay) badges += '<span class="badge ebay">🛒 eBAY</span>';
+            else if (primary.store !== 'ineedhemp') badges += `<span class="badge store">${primary.store_label}</span>`;
             if (isPriority) badges += '<span class="badge priority">PRIORITY</span>';
             if (group.some(o => o.customer_note)) badges += '<span class="badge note">📝 NOTE</span>';
 
@@ -786,28 +1653,46 @@ async function loadOrders() {
                 }
                 o.items.forEach(i => {
                     const thumb = i.image ? `<img class="item-thumb" src="${i.image}" alt="" loading="lazy">` : '';
-                    const priceStr = i.price ? `<span class="item-price">$${parseFloat(i.price).toFixed(2)}</span>` : '';
+                    let priceStr = '';
+                    if (i.price) {
+                        const paid = parseFloat(i.price);
+                        const orig = parseFloat(i.subtotal || i.price);
+                        if (orig > paid && orig > 0) {
+                            const discount = (orig - paid).toFixed(2);
+                            priceStr = `<span style="font-size:9px;opacity:.5">listed $${orig.toFixed(2)}</span><br><span class="item-price">$${paid.toFixed(2)}</span> <span style="color:#4ecdc4;font-size:10px">-$${discount}</span>`;
+                        } else {
+                            priceStr = `<span class="item-price">$${paid.toFixed(2)}</span>`;
+                        }
+                    }
                     let varsHtml = '';
                     if (i.variations && i.variations.length) {
-                        varsHtml = '<div class="item-vars">' + i.variations.map(v => `<span class="item-var-tag">${v}</span>`).join('') + '</div>';
+                        varsHtml = '<div class="item-vars">' + i.variations.map(v => {
+                            const idx = v.indexOf(':');
+                            if (idx !== -1) return `<span class="item-var-tag">${v.substring(0, idx+1)} <span class="var-val">${v.substring(idx+1).trim()}</span> ${varBinTag(v, i)}</span>`;
+                            return `<span class="item-var-tag"><span class="var-val">${v}</span> ${varBinTag(v, i)}</span>`;
+                        }).join('') + '</div>';
                     }
-                    itemsHtml += `<div class="item-row">${thumb}<div class="item-detail"><div class="item-name-line"><span class="item-name">${i.name}</span> <span class="item-qty">×${i.qty}</span> ${priceStr}</div>${varsHtml}</div></div>`;
+                    const qtyClass = i.qty >= 2 ? 'item-qty-high' : 'item-qty';
+                    itemsHtml += `<div class="item-row">${thumb}<div class="item-detail"><div class="item-name-line"><span class="item-name">${i.name.replace(/(?<!not )CHILDPROOF/gi,'<span class="childproof-flag">CHILDPROOF</span>')}</span> <span class="${qtyClass}">×${i.qty}</span> ${binTag(i)} ${priceStr}</div>${varsHtml}</div></div>`;
                 });
             });
 
             // Notes from all orders
             let noteHtml = '';
             group.forEach(o => {
-                if (o.customer_note) noteHtml += `<div class="order-note">📝 ${isMerged ? '#'+o.id+': ' : ''}${o.customer_note}</div>`;
+                if (o.customer_note) noteHtml += `<div class="order-note">📝 ${isMerged ? '#'+o.id+': ' : ''}${o.customer_note} ${noteBinTag(o.customer_note)}</div>`;
             });
 
             // Admin note for primary order
             let adminNoteHtml = `
                 <div class="admin-note-box">
-                    <textarea id="note-ta-${primary.store}-${primary.id}" placeholder="Add admin note..." rows="1"></textarea>
-                    <div class="note-row">
-                        <button class="btn" onclick="saveNote('${primary.store}',${primary.id})" id="note-btn-${primary.store}-${primary.id}" style="padding:3px 10px;font-size:10px">💾 Save Note</button>
-                        <span class="note-status" id="note-status-${primary.store}-${primary.id}"></span>
+                    <button class="admin-note-toggle" onclick="this.nextElementSibling.classList.toggle('open')">📝 Note</button>
+                    <div class="admin-note-expand">
+                        <textarea id="note-ta-${primary.store}-${primary.id}" placeholder="Add admin note..." rows="1"></textarea>
+                        <div class="note-row">
+                            <button class="btn" onclick="saveNote('${primary.store}',${primary.id})" id="note-btn-${primary.store}-${primary.id}" style="padding:3px 10px;font-size:10px">💾 Save</button>
+                            <span class="note-status" id="note-status-${primary.store}-${primary.id}"></span>
+                        </div>
                     </div>
                 </div>`;
 
@@ -824,34 +1709,38 @@ async function loadOrders() {
             const nextCardId = nextEntry ? nextEntry.orders.map(o => `${o.store}-${o.id}`).join('_') : '';
 
             html += `
-            <div class="order-wrapper" id="card-${cardId}">
+            <div class="order-wrapper${idx % 2 === 1 ? ' zebra' : ''}" id="card-${cardId}">
                 <div class="order-nav">
                     ${nextCardId ? `<button class="order-nav-btn" title="Next order" onclick="document.getElementById('card-${nextCardId}').scrollIntoView({behavior:'smooth',block:'start'})">↓</button>` : ''}
                     <button class="order-nav-btn" title="Jump to completed" onclick="document.getElementById('completed-container').scrollIntoView({behavior:'smooth',block:'start'})">⏬</button>
                 </div>
-                <div class="order-card${isFraud ? ' fraud' : ''}" data-customer="${primary.customer}">
+                <div class="order-card${isFraud ? ' fraud' : ''}" data-customer="${primary.customer}" data-priority="${isPriority}">
                 ${fraudBanner}
                 <div class="order-head">
-                    <div>
+                    <div class="order-col-left">
                         <span class="order-id">${orderIds}${badges}</span>
+                        <div style="font-size:10px;color:var(--dim);margin-top:2px">🕒 ${formatOrderDate(primary.date)}</div>
                         <div class="order-customer">${primary.customer}</div>
-                        ${primary.order_count > 1 ? `<div class="order-history"><span class="repeat">${primary.order_count} orders</span> · <span class="spent">$${parseFloat(primary.total_spent || 0).toFixed(0)} lifetime</span></div>` : primary.order_count === 1 ? '<div class="order-history" style="color:var(--cyan)">New customer</div>' : ''}
-                        <div class="order-address">${primary.address.street1} ${primary.address.street2||''}<br>${primary.address.city}, ${primary.address.state} ${primary.address.zip}</div>
-                        <div class="order-email">${primary.email || ''}${primary.phone ? ' · '+primary.phone : ''}</div>
                     </div>
-                    <div style="text-align:right">
+                    <div class="order-col-loyalty">${renderLoyalty(primary)}</div>
+                    <div class="order-col-mid">
+                        <div class="order-address">${primary.address.street1} ${primary.address.street2||''}<br>${primary.address.city}, ${primary.address.state} ${primary.address.zip}</div>
+                        <div class="order-email">${primary.email || ''}${primary.phone ? '<span class="oe-sep"> · </span>'+primary.phone : ''}</div>
+                    </div>
+                    <div class="order-col-right">
                         <div class="order-total">$${combinedTotal}${isMerged ? '<div style="font-size:10px;color:var(--cyan)">'+group.length+' orders combined</div>' : couponHtml(primary)}</div>
                         <div class="order-ship-method">🚚 ${primary.ship_method}</div>
                     </div>
                 </div>
                 <div class="order-items">${itemsHtml}</div>
                 ${noteHtml}
-                ${adminNoteHtml}
                 <div class="ship-controls">
                     <input type="number" class="weight-input" id="wt-${primary.store}-${primary.id}" value="${combinedWeight}" min="0.1" step="0.5">
                     <span class="oz-label">oz</span>${weightNote}
                     <button class="btn primary" onclick="getRates('${primary.store}',${primary.id})">Get Rates</button>
                     <button class="multibox-toggle" id="mb-toggle-${primary.store}-${primary.id}" onclick="toggleMultiBox('${primary.store}',${primary.id})">📦 Multi-Box</button>
+                    ${adminNoteHtml}
+                    <div id="rates-${primary.store}-${primary.id}" class="rates-inline"></div>
                 </div>
                 <div class="multibox-panel" id="mb-panel-${primary.store}-${primary.id}">
                     <div class="mb-row">
@@ -862,22 +1751,136 @@ async function loadOrders() {
                     <div class="mb-box-fields" id="mb-fields-${primary.store}-${primary.id}"></div>
                     <button class="btn primary" onclick="getMultiBoxRates('${primary.store}',${primary.id})" style="font-size:12px;padding:6px 12px;margin-top:4px">📦 Get Multi-Box Rates</button>
                 </div>
-                <div id="rates-${primary.store}-${primary.id}"></div>
             </div>
             </div>`;
         });
 
         document.getElementById('orders-container').innerHTML = html;
 
-        // Auto-load rates — one per merged group, staggered
-        renderList.forEach((entry, idx) => {
+        // Render pre-loaded rates instantly (no more staggered API calls)
+        renderList.forEach(entry => {
             const primary = entry.orders[0];
-            setTimeout(() => getRates(primary.store, primary.id), idx * 1500);
+            const preRates = primary.rates || [];
+            if (preRates.length) {
+                renderRatesForOrder(primary.store, primary.id, preRates);
+            } else {
+                // No cached rates yet — show a button to load
+                const ratesDiv = document.getElementById(`rates-${primary.store}-${primary.id}`);
+                if (ratesDiv) ratesDiv.innerHTML = '<div style="color:var(--dim);font-size:11px;padding:4px 0">Rates loading in background...</div>';
+            }
         });
     }
 
     // Render completed section
     renderCompleted(completedToday);
+}
+
+function filterOrders(query) {
+    const q = (query || '').trim().toLowerCase();
+    const wrappers = document.querySelectorAll('.order-wrapper, .order-card, [id^="card-"]');
+    const completedCards = document.querySelectorAll('.completed-card');
+
+    if (!q) {
+        wrappers.forEach(w => w.style.display = '');
+        completedCards.forEach(c => c.style.display = '');
+        return;
+    }
+
+    // Filter pending orders
+    wrappers.forEach(w => {
+        const text = w.textContent.toLowerCase();
+        w.style.display = text.includes(q) ? '' : 'none';
+    });
+
+    // Filter completed orders
+    completedCards.forEach(c => {
+        const text = c.textContent.toLowerCase();
+        c.style.display = text.includes(q) ? '' : 'none';
+    });
+}
+
+function isGroundRate(r) {
+    const s = (r.service || '').toLowerCase();
+    const c = (r.carrier || '').toLowerCase();
+    return s.includes('ground') || s.includes('smartpost') || s.includes('smart_post') || s.includes('groundsaver');
+}
+
+function filterRatesForOrder(store, orderId, rates) {
+    // Check if order is priority — if so, remove ground options
+    const card = document.querySelector(`[id*="${store}-${orderId}"] .order-card`) ||
+                 document.querySelector(`.order-card[data-priority="true"]`);
+    let isPriority = false;
+    if (card) isPriority = card.dataset.priority === 'true';
+    if (!isPriority) {
+        const order = _cachedOrders.find(o => o.store === store && o.id === orderId);
+        if (order) isPriority = order.ship_method.toLowerCase().includes('priority');
+    }
+    if (isPriority) {
+        const filtered = rates.filter(r => !isGroundRate(r));
+        return filtered;
+    }
+    return rates;
+}
+
+// One-row rates: the 3 rates Matt most likely buys up front, everything else behind "other options" at the end.
+// Rule from his last 437 EasyPost labels (2026-09-02): Ground Advantage under 10 lb, UPS Ground over,
+// UPS Expedited/Standard international, Priority padded envelope when the customer paid the upgrade.
+function pickRecommendedRates(store, orderId, rates) {
+    // Returns the 3 most likely picks, in order, for this order (rest go behind "other options").
+    const order = _cachedOrders.find(o => o.store === store && o.id === orderId) || {};
+    const wtEl = document.getElementById(`wt-${store}-${orderId}`);
+    const wt = wtEl ? (parseFloat(wtEl.value) || 0) : 0;
+    const country = (((order.address || {}).country) || "US").toUpperCase();
+    const intl = country !== "US";
+    const pri = /priority/i.test(order.ship_method || "");
+    const find = re => rates.find(r => re.test(`${r.carrier} ${r.service}`));
+    let prefs;
+    if (intl) prefs = [/ups.*expedited/i, /ups.*standard/i, /firstclass.*international/i, /international/i];
+    else if (pri) prefs = [/padded/i, /^USPS Priority$/i, /flat ?rate ?envelope/i];
+    else if (wt > 160) prefs = [/ups.*ground/i, /groundadvantage/i, /medium ?flat ?rate ?box|med flat/i];
+    else if (wt > 16) prefs = [/groundadvantage/i, /padded/i, /^USPS Priority$/i];
+    else prefs = [/groundadvantage/i, /flat ?rate ?envelope/i, /padded/i];
+    const picks = [];
+    prefs.forEach(re => { const r = find(re); if (r && !picks.includes(r)) picks.push(r); });
+    for (const r of rates) { if (picks.length >= 3) break; if (!picks.includes(r)) picks.push(r); }
+    return picks.slice(0, 3);
+}
+function rateBtnHtml(store, orderId, r, extraClass) {
+    const carrierClass = r.carrier.toLowerCase().includes("usps") ? "usps" :
+                         r.carrier.toLowerCase().includes("fedex") ? "fedex" :
+                         r.carrier.toLowerCase().includes("ups") ? "ups" : "";
+    const typeTag = "";
+    return `<button class="rate-btn ${carrierClass}${extraClass}" onclick="selectRate(this,'${store}',${orderId},'${r.shipment_id}','${r.id}','${r.carrier_raw}','${r.rate.toFixed(2)}','${shortRate(r.carrier, r.service).replace(/'/g,"\\'")}')">
+            <span class="rate-price">$${r.rate.toFixed(2)}</span>
+            <span class="rate-carrier">${shortRate(r.carrier, r.service)}</span>
+            <span class="rate-days">${r.days||"?"}d</span>
+            ${typeTag}
+        </button>`;
+}
+function ratesGridHtml(store, orderId, rates) {
+    const picks = pickRecommendedRates(store, orderId, rates);
+    const rest = rates.filter(r => !picks.includes(r));
+    let html = `<div class="rates-grid">` + picks.map((r, i) => rateBtnHtml(store, orderId, r, i === 0 ? " cheapest recommended" : "")).join("");
+    if (rest.length) {
+        html += `<span class="rates-more" hidden>` + rest.map(r => rateBtnHtml(store, orderId, r, "")).join("") + `</span>`;
+        html += `<button class="rates-more-btn" onclick="toggleMoreRates(this)">▸ more (${rest.length})</button>`;
+    }
+    html += `</div><div id="purchase-area-${store}-${orderId}" style="margin-top:8px"></div>`;
+    return html;
+}
+function toggleMoreRates(btn) {
+    const more = btn.parentElement.querySelector(".rates-more");
+    const opening = more.hidden;
+    more.hidden = !opening;
+    btn.textContent = opening ? "▾ fewer" : `▸ more (${more.children.length})`;
+}
+
+function renderRatesForOrder(store, orderId, rates) {
+    const ratesDiv = document.getElementById(`rates-${store}-${orderId}`);
+    if (!ratesDiv || !rates.length) return;
+    rates = filterRatesForOrder(store, orderId, rates);
+    if (!rates.length) { ratesDiv.innerHTML = '<div style="color:var(--dim)">No eligible rates (ground excluded for Priority)</div>'; return; }
+    ratesDiv.innerHTML = ratesGridHtml(store, orderId, rates);
 }
 
 async function getRates(store, orderId) {
@@ -886,9 +1889,8 @@ async function getRates(store, orderId) {
     ratesDiv.innerHTML = '<div class="loading">⏳ Getting rates...</div>';
 
     try {
-        const data = await api('/api/shipping/orders');
-        if (data.error) { ratesDiv.innerHTML = `<div style="color:var(--red)">❌ ${data.error}</div>`; return; }
-        const order = data.orders.find(o => o.store === store && o.id === orderId);
+        // Use cached order data — no need to re-fetch all 3 stores
+        const order = _cachedOrders.find(o => o.store === store && o.id === orderId);
         if (!order) { ratesDiv.innerHTML = '<div style="color:var(--red)">Order not found</div>'; return; }
 
         const result = await api('/api/shipping/rates', {
@@ -898,28 +1900,28 @@ async function getRates(store, orderId) {
 
         if (result.error) { ratesDiv.innerHTML = `<div style="color:var(--red)">❌ ${result.error}</div>`; return; }
 
-        const rates = result.rates || [];
+        let rates = result.rates || [];
         if (!rates.length) { ratesDiv.innerHTML = '<div style="color:var(--dim)">No rates available</div>'; return; }
 
-        let html = '<div class="rates-grid">';
-        rates.forEach((r, i) => {
-            const cheapest = i === 0 ? ' cheapest' : '';
-            const carrierClass = r.carrier.toLowerCase().includes('usps') ? 'usps' :
-                                 r.carrier.toLowerCase().includes('fedex') ? 'fedex' :
-                                 r.carrier.toLowerCase().includes('ups') ? 'ups' : '';
-            const typeTag = r.type !== 'Standard' ? `<span class="rate-type">📨 ${r.type}</span>` : '';
-            html += `
-            <button class="rate-btn ${carrierClass}${cheapest}" onclick="shipOrder('${store}',${orderId},'${r.shipment_id}','${r.id}','${r.carrier_raw}')">
-                <span class="rate-price">$${r.rate.toFixed(2)}</span>
-                <span class="rate-carrier">${r.carrier} ${r.service}</span>
-                <span class="rate-days">${r.days||'?'}d</span>
-                ${typeTag}
-            </button>`;
-        });
-        html += '</div>';
-        ratesDiv.innerHTML = html;
+        rates = filterRatesForOrder(store, orderId, rates);
+        if (!rates.length) { ratesDiv.innerHTML = '<div style="color:var(--dim)">No eligible rates (ground excluded for Priority)</div>'; return; }
+
+        ratesDiv.innerHTML = ratesGridHtml(store, orderId, rates);
     } catch(e) {
         ratesDiv.innerHTML = `<div style="color:var(--red)">❌ ${e.message || 'Failed to get rates'}</div>`;
+    }
+}
+
+function selectRate(btn, store, orderId, shipmentId, rateId, carrier, price, serviceName) {
+    // Deselect all rate buttons in this order's grid
+    const grid = btn.closest('.rates-grid');
+    grid.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('selected'));
+    // Highlight the selected one
+    btn.classList.add('selected');
+    // Show the purchase confirmation button
+    const area = document.getElementById(`purchase-area-${store}-${orderId}`);
+    if (area) {
+        area.innerHTML = `<button class="purchase-confirm" onclick="shipOrder('${store}',${orderId},'${shipmentId}','${rateId}','${carrier}')">🚀 Purchase $${price} ${serviceName}</button>`;
     }
 }
 
@@ -1027,6 +2029,18 @@ async function printLabel(url) {
 }
 
 loadOrders();
+
+// Hold-to-zoom thumbnails — centered on screen
+document.addEventListener('mousedown', e => {
+    if (e.target.classList.contains('item-thumb')) {
+        const tz = document.getElementById('thumb-zoom');
+        tz.src = e.target.src;
+        tz.style.display = 'block';
+    }
+});
+document.addEventListener('mouseup', () => { document.getElementById('thumb-zoom').style.display = 'none'; });
+document.addEventListener('mouseleave', () => { document.getElementById('thumb-zoom').style.display = 'none'; });
 </script>
+<img class="thumb-zoom" id="thumb-zoom" src="" alt="">
 </body>
 </html>
